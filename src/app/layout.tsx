@@ -1,18 +1,35 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import localFont from 'next/font/local';
 import './globals.css';
 import { Toaster } from '@/components/ui/sonner';
 import { ThemeProvider } from '@/providers/theme-provider';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
+const iranyekan = localFont({
+  src: [
+    {
+      path: './../../public/fonts/iranyekan/IRANYekanXFaNum-Light.woff2',
+      weight: '300',
+      style: 'normal',
+    },
+    {
+      path: './../../public/fonts/iranyekan/IRANYekanXFaNum-Regular.woff2',
+      weight: '400',
+      style: 'normal',
+    },
+    {
+      path: './../../public/fonts/iranyekan/IRANYekanXFaNum-Medium.woff2',
+      weight: '500',
+      style: 'normal',
+    },
+    {
+      path: './../../public/fonts/iranyekan/IRANYekanXFaNum-Bold.woff2',
+      weight: '700',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-iranyekan',
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
-});
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -27,7 +44,7 @@ export default function RootLayout({
   return (
     <html lang="fa" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${iranyekan.variable} antialiased`}
       >
         <ThemeProvider
           attribute="class"
