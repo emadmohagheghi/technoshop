@@ -4,6 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/providers/theme-provider";
 import Header from "@/components/header/header";
+import QueryProvider from "@/providers/react-query-provider";
 
 const iranyekan = localFont({
   src: [
@@ -50,8 +51,10 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Header />
-          <main className="pt-[72px] lg:pt-[175px]">{children}</main>
+          <QueryProvider>
+            <Header />
+            <main className="pt-[72px] lg:pt-[175px]">{children}</main>
+          </QueryProvider>
         </ThemeProvider>
         <Toaster />
       </body>
