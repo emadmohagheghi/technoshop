@@ -2,6 +2,9 @@
 @import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
+* {
+  @apply font-iranyekan;
+}
 
 @theme inline {
   --color-*: initial;
@@ -80,6 +83,8 @@
   --color-warning-content: var(--color-warning-content);
   --color-warning-focus: var(--color-warning-focus);
   --color-white: var(--color-white);
+
+  --font-iranyekan: var(--font-iranyekan);
 }
 
 :root {
