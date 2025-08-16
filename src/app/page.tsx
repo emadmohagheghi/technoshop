@@ -6,7 +6,7 @@ export default function Home() {
   const { data: banners = [], isFetching: isGettingBanners } = useBanner();
 
   return (
-    <div className="mx-auto h-999 max-w-[1272px] p-4 lg:p-6">
+    <div className="mx-auto h-999 max-w-[1266px] p-5">
       <HomeSlider banners={banners} isLoading={isGettingBanners} />
     </div>
   );

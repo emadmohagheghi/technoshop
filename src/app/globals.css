@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 * {
@@ -200,4 +200,36 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.home-slider-curved::after {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  background-color: white;
+  left: -24px;
+  bottom: 0;
+  mask-image: radial-gradient(
+    circle at bottom right,
+    transparent 70%,
+    black 71%
+  );
+  rotate: 180deg;
+}
+
+.home-slider-curved::before {
+  content: "";
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  background-color: white;
+  right: 0;
+  top: -24px;
+  mask-image: radial-gradient(
+    circle at bottom right,
+    transparent 70%,
+    black 71%
+  );
+  rotate: 180deg;
 }

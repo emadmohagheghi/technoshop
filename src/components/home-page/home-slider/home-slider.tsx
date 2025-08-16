@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Banner } from "@/types/banner.types";
 import { Skeleton } from "../../ui/skeleton";
 import { imageUrl } from "@/utils/product";
+import { ArrowRight2, ArrowLeft2 } from "iconsax-reactjs";
 
 type HomeSliderProps = {
   banners: Banner[];
@@ -20,7 +21,7 @@ export default function HomeSlider({ banners, isLoading }: HomeSliderProps) {
     (banner) => banner.position === "HOME_SIDE_BANNER",
   );
 
-  const [sliderRef] = useKeenSlider<HTMLDivElement>(
+  const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
     {
       initial: 0,
       rtl: true,
@@ -59,19 +60,22 @@ export default function HomeSlider({ banners, isLoading }: HomeSliderProps) {
     ],
   );
 
-  if (isLoading) return <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-    <div className="flex-3 rounded-xl">
-      <Skeleton className="w-full aspect-[912/412]" />
-    </div>
-    <div className="flex flex-1 gap-3 lg:flex-col">
-      <Skeleton className="w-full aspect-[304/200]" />
-      <Skeleton className="w-full aspect-[304/200]" />
-    </div>
-  </div>
+  if (isLoading)
+    return (
+      <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+        <div className="flex-3 rounded-xl">
+          <Skeleton className="aspect-[912/412] w-full" />
+        </div>
+        <div className="flex flex-1 gap-3 lg:flex-col">
+          <Skeleton className="aspect-[304/200] w-full" />
+          <Skeleton className="aspect-[304/200] w-full" />
+        </div>
+      </div>
+    );
 
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-      <div ref={sliderRef} className="keen-slider flex-3 rounded-xl">
+      <div ref={sliderRef} className="keen-slider relative flex-3 rounded-xl">
         {sliderBanners.map((banner) => (
           <div key={banner.id} className="keen-slider__slide">
             <Image
@@ -79,10 +83,27 @@ export default function HomeSlider({ banners, isLoading }: HomeSliderProps) {
               alt={banner.title}
               width={912}
               height={412}
-              className="w-full rounded-lg"
+              className="w-full rounded-xl"
             />
           </div>
         ))}
+        <div
+          style={{ borderRadius: "22px 0 0 0" }}
+          className="home-slider-curved absolute -right-0.5 -bottom-0.5 hidden h-15 justify-between gap-3 bg-[#fff] p-3 md:flex"
+        >
+          <button
+            onClick={() => instanceRef.current?.next()}
+            className="aspect-square w-full cursor-pointer rounded-[10px] bg-gray-300 flex justify-center items-center"
+          >
+            <ArrowRight2 />
+          </button>
+          <button
+            onClick={() => instanceRef.current?.prev()}
+            className="aspect-square w-full cursor-pointer rounded-[10px] bg-gray-300 flex justify-center items-center"
+          >
+            <ArrowLeft2 />
+          </button>
+        </div>
       </div>
       <div className="flex flex-1 gap-3 lg:flex-col">
         {sideBanners.map((banner) => (
