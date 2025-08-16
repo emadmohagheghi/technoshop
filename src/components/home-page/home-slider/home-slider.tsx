@@ -6,10 +6,6 @@ import Image from "next/image";
 import { Banner } from "@/types/banner.types";
 import { Skeleton } from "../../ui/skeleton";
 import { imageUrl } from "@/utils/product";
-<<<<<<< HEAD
-=======
-import "./styles.css";
->>>>>>> 2a831a155ea75bd341a383daf4ec79205057fa49
 
 type HomeSliderProps = {
   banners: Banner[];
