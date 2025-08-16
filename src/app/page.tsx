@@ -1,5 +1,13 @@
-import { ModeToggle } from "@/components/ui/theme-toggle";
+"use client";
+import HomeSlider from "@/components/home-page/home-slider/home-slider";
+import { useBanner } from "@/hooks/use-benner";
 
 export default function Home() {
-  return <div className="mx-auto h-999 max-w-[1440px] p-4 lg:p-6"></div>;
+  const { data: banners = [], isFetching: isGettingBanners } = useBanner();
+
+  return (
+    <div className="mx-auto h-999 max-w-[1272px] p-4 lg:p-6">
+      <HomeSlider banners={banners} isLoading={isGettingBanners} />
+    </div>
+  );
 }
