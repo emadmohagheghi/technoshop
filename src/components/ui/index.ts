@@ -12,3 +12,4 @@ export * from "./popover";
 export * from "./select";
 export * from "./sonner";
 export * from "./theme-toggle";
+export * from "./carousel"
