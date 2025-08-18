@@ -8,6 +8,8 @@
 
 @theme inline {
   --color-*: initial;
+  --breakpoint-*: initial;
+
   /* shadcn */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -85,6 +87,12 @@
   --color-white: var(--color-white);
 
   --font-iranyekan: var(--font-iranyekan);
+
+  --breakpoint-xs: 480px; /* موبایل بزرگ */
+  --breakpoint-sm: 640px; /* تبلت کوچک */
+  --breakpoint-md: 768px; /* تبلت بزرگ */
+  --breakpoint-lg: 1024px; /* لپ‌تاپ معمولی */
+  --breakpoint-xl: 1248px; /* بزرگترین اسکرین پروژه تو */
 }
 
 :root {

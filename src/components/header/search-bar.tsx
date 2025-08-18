@@ -1,5 +1,5 @@
 "use client";
-import { Input } from "@/components/ui";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { SearchNormal1 } from "iconsax-reactjs";
 import { useState } from "react";

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { ThemeProvider } from "@/providers/theme-provider";
 import Header from "@/components/header/header";
 import QueryProvider from "@/providers/react-query-provider";
+import GetHeaderData from "@/providers/header-data-provider";
 
 const iranyekan = localFont({
   src: [
@@ -43,19 +43,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fa" dir="rtl" suppressHydrationWarning>
+    <html lang="fa" dir="rtl">
       <body className={`${iranyekan.variable} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <QueryProvider>
-            <Header />
-            <main className="pt-[72px] lg:pt-[175px]">{children}</main>
-          </QueryProvider>
-        </ThemeProvider>
+        <QueryProvider>
+          <GetHeaderData />
+          <Header />
+          <main className="pt-[62px] lg:pt-[175px]">{children}</main>
+        </QueryProvider>
         <Toaster />
       </body>
     </html>
