@@ -29,7 +29,7 @@ export default function ProductCard({
 
   return (
     <Link className="w-full" href={url}>
-      <Card className="gap-2 px-3.5 py-4 shadow-none bg-white w-full">
+      <Card className="lg:gap-2 gap-0 lg:px-3.5 lg:py-4 p-2 shadow-none bg-white w-full">
         <CardHeader className="flex h-4 items-center justify-between p-0">
           <Heart
             size={16}
@@ -44,7 +44,7 @@ export default function ProductCard({
             </span>
           )}
         </CardHeader>
-        <CardContent className="flex flex-col gap-2 p-0">
+        <CardContent className="flex flex-col lg:gap-2 p-0">
           <Image
             src={imageUrl(image)}
             alt={title_ir}
@@ -52,15 +52,15 @@ export default function ProductCard({
             height={256}
             className="aspect-square w-full h-full rounded-md object-cover mx-auto mix-blend-multiply"
           />
-          <CardTitle className="line-clamp-2 p-0 text-center text-xs leading-[140%] font-medium">
+          <CardTitle className="line-clamp-2 p-0 text-center text-[10px] lg:text-xs leading-[140%] font-medium">
             {title_ir}
           </CardTitle>
         </CardContent>
-        <CardFooter className="flex-col gap-2 p-0 self-end">
-          <div className="h-3.5 text-sm text-gray-600 line-through">
+        <CardFooter className="flex-col gap-0 lg:gap-2 p-0 self-end text-[10px] lg:text-sm">
+          <div className="h-3.5  text-gray-600 line-through mr-auto ml-">
             {special_sale_price && sale_price.toLocaleString()}
           </div>
-          <div className="bg-brand-primary space-x-1 text-sm font-bold p-1 rounded text-white">
+          <div className="bg-brand-primary space-x-1 font-bold p-1 rounded text-white">
             <span>
               {special_sale_price
                 ? special_sale_price.toLocaleString()
