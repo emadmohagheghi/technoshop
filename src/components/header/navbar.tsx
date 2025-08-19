@@ -53,7 +53,7 @@ export default function Navbar() {
       {/* mobile */}
       <div
         className={cn(
-          "fixed right-0 bottom-0 left-0 duration-300 lg:hidden",
+          "fixed right-0 bottom-0 left-0 duration-300 lg:hidden z-10",
           !isScrollingUp && "translate-y-[90px]",
         )}
       >

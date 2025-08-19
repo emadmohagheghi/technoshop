@@ -1,7 +1,6 @@
 import Image from "next/image";
-import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { ShoppingCart, LoginCurve, SearchNormal1 } from "iconsax-reactjs";
+import { ShoppingCart, LoginCurve } from "iconsax-reactjs";
 import Navbar from "./navbar";
 import SearchBar from "./search-bar";
 

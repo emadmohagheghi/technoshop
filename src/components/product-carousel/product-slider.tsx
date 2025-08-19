@@ -36,7 +36,7 @@ export default function ProductCarousel({
         className="*:lg:!w-[184px] *:!w-[119px] *:shrink-0"
       >
         {products.map((item) => (
-          <ProductCard {...item} />
+          <ProductCard key={item.id} {...item} />
         ))}
       </Carousel>
     </div>
