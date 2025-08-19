@@ -33,7 +33,6 @@ export default function ProductCarousel({
       <Carousel
         rtl
         slides={{ perView: "auto", spacing: 8 }}
-        className="*:lg:!w-[184px] *:!w-[119px] *:shrink-0"
       >
         {products.map((item) => (
           <ProductCard key={item.id} {...item} />

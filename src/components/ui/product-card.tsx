@@ -26,8 +26,8 @@ export default function ProductCard({
   );
 
   return (
-    <Link className="w-full" href={url}>
-      <Card className="lg:gap-2 gap-0 lg:px-3.5 lg:py-4 p-2 shadow-none bg-white w-full">
+    <Link className="w-fit" href={url}>
+      <Card className="lg:gap-2 gap-0 lg:px-3.5 lg:py-4 p-2 shadow-none bg-white lg:w-[184px] w-[119px]">
         <CardHeader className="flex h-4 items-center justify-between p-0">
           <Heart
             size={16}

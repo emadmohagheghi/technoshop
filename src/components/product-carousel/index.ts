@@ -1,1 +1,1 @@
-export { default as ProductCarousel } from "./product-slider";
+export { default as ProductCarousel } from "./product-carousel";

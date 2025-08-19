@@ -6,6 +6,11 @@
   @apply font-iranyekan;
 }
 
+.keen-slider__slide {
+  width: fit-content !important;
+  flex-shrink: 0 !important;
+}
+
 @theme inline {
   --color-*: initial;
   --breakpoint-*: initial;
