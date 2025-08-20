@@ -49,8 +49,8 @@ export default function RootLayout({
           <GetHeaderData />
           <Header />
           <main className="pt-[62px] lg:pt-[175px]">{children}</main>
+          <Toaster />
         </QueryProvider>
-        <Toaster />
       </body>
     </html>
   );
