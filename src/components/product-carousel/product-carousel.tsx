@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowLeft2 } from "iconsax-reactjs";
 import Carousel from "@/components/ui/carousel";
 import ProductCard from "@/components/ui/product-card";
+import ProductCardSkeleton from "@/components/ui/product-card-skeleton";
 
 type ProductCarouselProps = {
   products: Product[];
@@ -14,6 +15,7 @@ export default function ProductCarousel({
   products,
   link,
   title,
+  isLoading,
 }: ProductCarouselProps) {
   return (
     <div className="flex flex-col gap-4">
@@ -31,12 +33,18 @@ export default function ProductCarousel({
         </div>
       )}
       <Carousel
+        key={isLoading ? "loading" : "loaded"}
         rtl
         slides={{ perView: "auto", spacing: 8 }}
       >
-        {products.map((item) => (
-          <ProductCard key={item.id} {...item} />
-        ))}
+        {!isLoading &&
+          products.map((item) => <ProductCard key={item.id} {...item} />)}
+        {isLoading &&
+          Array(8)
+            .fill(true)
+            .map((_, index) => (
+              <ProductCardSkeleton key={`skeleton-${index}`} />
+            ))}
       </Carousel>
     </div>
   );
