@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { useKeenSlider } from "keen-slider/react";
 import type { KeenSliderOptions } from "keen-slider";
 import "keen-slider/keen-slider.min.css";
@@ -12,21 +12,19 @@ type CarouselProps = {
 const Carousel = ({ children, className, style, ...rest }: CarouselProps) => {
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(rest);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      if (instanceRef.current) {
-        instanceRef.current.update();
-      }
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [instanceRef]);
-
-  useEffect(() => {
+  const updateSlider = useCallback(() => {
     if (instanceRef.current) {
       instanceRef.current.update();
     }
-  }, [children, instanceRef]);
+  }, [instanceRef]);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(() => {
+      updateSlider();
+    });
+
+    return () => cancelAnimationFrame(frame);
+  }, [children, updateSlider]);
 
   return (
     <div ref={sliderRef} style={style} className={`keen-slider ${className}`}>
