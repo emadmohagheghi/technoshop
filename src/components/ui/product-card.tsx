@@ -55,7 +55,7 @@ export default function ProductCard({
           </CardTitle>
         </CardContent>
         <CardFooter className="flex-col gap-0 lg:gap-2 p-0 self-end text-[10px] lg:text-sm">
-          <div className="h-3.5  text-gray-600 line-through mr-auto ml-">
+          <div className="h-3.5  text-gray-600 line-through mr-auto ml-2">
             {special_sale_price && sale_price.toLocaleString()}
           </div>
           <div className="bg-brand-primary space-x-1 font-bold p-1 rounded text-white">
