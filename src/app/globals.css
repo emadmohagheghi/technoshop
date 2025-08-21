@@ -11,6 +11,12 @@
   flex-shrink: 0 !important;
 }
 
+@layer utilities{
+  .container{
+    @apply mx-auto
+  }
+}
+
 @theme inline {
   --color-*: initial;
   --breakpoint-*: initial;
