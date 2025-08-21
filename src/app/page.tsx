@@ -20,7 +20,7 @@ export default function Home() {
 
   return (
     <div className="">
-      <div className="container mx-auto h-500 space-y-6 p-3 lg:space-y-12">
+      <div className="container space-y-6 p-3 lg:space-y-12">
         <HomeSlider banners={banners} isLoading={isGettingBanners} />
 
         <CategorySlider categories={categories} />
