@@ -10,13 +10,16 @@ export default function SearchBar() {
   return (
     <>
       <div
-        className={cn("relative z-20 h-12 w-full lg:max-w-[600px] flex-1 bg-[#fff]", {
-          "rounded-t-md": isFocused,
-        })}
+        className={cn(
+          "relative z-20 h-12 w-full flex-1 bg-[#fff] lg:max-w-[600px]",
+          {
+            "rounded-t-md": isFocused,
+          },
+        )}
       >
         <Input
           placeholder="جستجو"
-          className={cn("-2 size-full", {
+          className={cn("size-full peer focus:placeholder:text-black/0 md:text-base", {
             "border-brand-primary border-0 border-b-2": isFocused,
           })}
           onFocus={() => {
@@ -30,10 +33,16 @@ export default function SearchBar() {
           size="24"
           className="absolute top-1/2 left-3 -translate-y-1/2 cursor-pointer"
         />
+        <span className="text-brand-primary pointer-events-none absolute top-1/2 right-16 z-20 -translate-y-1/2 text-base font-bold peer-focus:hidden lg:hidden">
+          <span className="font-normal text-gray-700">در</span>
+          تکنوشاپ...
+        </span>
         {isFocused ? (
           <div className="z-20 flex w-full items-center gap-14 rounded-b-md bg-[#fff] p-8">
             <div>
-              <p className="mb-6 text-xl font-medium">بیشترین موارد جستجو شده</p>
+              <p className="mb-6 text-xl font-medium">
+                بیشترین موارد جستجو شده
+              </p>
               <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-base text-gray-700 *:cursor-pointer">
                 <p>مک بوک پرو</p>
                 <p>اسپیکر های jbl</p>

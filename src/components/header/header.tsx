@@ -42,10 +42,7 @@ export default function Header() {
         <div className="fixed right-0 left-0 p-3 z-20 bg-[#fff]">
           <div className="relative h-12 flex-1 rounded-md border">
             <SearchBar />
-            <span className="text-brand-primary pointer-events-none absolute top-1/2 right-16 z-20 -translate-y-1/2 text-base font-bold peer-focus:hidden">
-              <span className="text-gray-">در</span>
-              تکنوشاپ...
-            </span>
+            
           </div>
         </div>
         <Navbar />
