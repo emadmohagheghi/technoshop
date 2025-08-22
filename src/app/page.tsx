@@ -9,6 +9,7 @@ import {
   useGetSpecialProducts,
 } from "@/hooks/useProducts";
 import { OffersCarousel } from "@/components/home-page/offers-carousel";
+import SecondHomeSlider from "@/components/home-page/second-home-slider";
 
 export default function Home() {
   const { data: banners = [], isFetching: isGettingBanners } = useBanner();
@@ -36,6 +37,8 @@ export default function Home() {
           title="جدیدترین محصولات"
           link="/"
         />
+
+        <SecondHomeSlider />
       </div>
     </div>
   );
