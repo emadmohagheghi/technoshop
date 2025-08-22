@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
-import Header from "@/components/header/header";
+import { Toaster } from "@/app/_components/ui/sonner";
+import Header from "@/app/_components/header/header";
 import QueryProvider from "@/providers/react-query-provider";
 import GetHeaderData from "@/providers/header-data-provider";
-import Footer from "@/components/footer";
+import Footer from "@/app/_components/footer";
 
 const iranyekan = localFont({
   src: [

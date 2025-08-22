@@ -1,4 +1,4 @@
-import Carousel from "@/components/ui/carousel";
+import Carousel from "@/app/_components/ui/carousel";
 import Image from "next/image";
 
 export default function SecondHomeSlider() {

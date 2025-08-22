@@ -1,4 +1,4 @@
-import Carousel from "@/components/ui/carousel";
+import Carousel from "@/app/_components/ui/carousel";
 import { Brand } from "@/types/brand.types";
 import { imageUrl } from "@/utils/product";
 import Image from "next/image";

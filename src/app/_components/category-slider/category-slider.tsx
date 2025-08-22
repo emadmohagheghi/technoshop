@@ -1,10 +1,10 @@
 "use client";
-import Carousel from "@/components/ui/carousel";
+import Carousel from "@/app/_components/ui/carousel";
 import { Category } from "@/types/categories.types";
 import Link from "next/link";
 import Image from "next/image";
 import { imageUrl } from "@/utils/product";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/app/_components/ui/skeleton";
 
 type CategorySliderProps = {
   categories: Category[];
@@ -13,11 +13,14 @@ type CategorySliderProps = {
 export default function CategorySlider({ categories }: CategorySliderProps) {
   if (categories.length <= 0) {
     return (
-      <div className="flex items-center justify-start gap-6 *:shrink-0 overflow-hidden">
+      <div className="flex items-center justify-start gap-6 overflow-hidden *:shrink-0">
         {Array(6)
           .fill(true)
           .map((_, index) => (
-            <Skeleton key={index} className="aspect-square w-[88px] sm:w-[184px]" />
+            <Skeleton
+              key={index}
+              className="aspect-square w-[88px] sm:w-[184px]"
+            />
           ))}
       </div>
     );
@@ -40,7 +43,7 @@ export default function CategorySlider({ categories }: CategorySliderProps) {
               alt={category.title_en}
               width={117}
               height={117}
-              className="aspect-square max-w-[117px] w-full object-contain"
+              className="aspect-square w-full max-w-[117px] object-contain"
             />
 
             <h2 className="text-center text-xs lg:text-xl">

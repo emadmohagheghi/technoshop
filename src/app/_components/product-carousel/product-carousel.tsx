@@ -1,9 +1,9 @@
 import { Product } from "@/types/product.types";
 import Link from "next/link";
 import { ArrowLeft2 } from "iconsax-reactjs";
-import Carousel from "@/components/ui/carousel";
-import ProductCard from "@/components/ui/product-card";
-import ProductCardSkeleton from "@/components/ui/product-card-skeleton";
+import Carousel from "@/app/_components/ui/carousel";
+import ProductCard from "@/app/_components/ui/product-card";
+import ProductCardSkeleton from "@/app/_components/ui/product-card-skeleton";
 
 type ProductCarouselProps = {
   products: Product[];

@@ -1,20 +1,20 @@
 "use client";
-import { HomeSlider } from "@/components/home-page/home-slider";
+import { HomeSlider } from "@/app/_components/home-slider";
 import { useBanner } from "@/hooks/use-benner";
 import { useHeaderStore } from "@/stores/header-data.store";
-import { CategorySlider } from "@/components/home-page/category-slider";
-import { ProductCarousel } from "@/components/product-carousel";
+import { CategorySlider } from "@/app/_components/category-slider";
+import { ProductCarousel } from "@/app/_components/product-carousel";
 import {
   useGetNewestProducts,
   useGetSpecialProducts,
   useGetBestSellingProducts,
 } from "@/hooks/useProducts";
-import { OffersCarousel } from "@/components/home-page/offers-carousel";
-import SecondHomeSlider from "@/components/home-page/second-home-slider";
-import BrandCarousel from "@/components/home-page/brand-slider/brand-slider";
-import WatchBanner from "@/components/home-page/watch-banner";
-import FAQSection from "@/components/home-page/faq";
-import Features from "@/components/home-page/features";
+import { OffersCarousel } from "@/app/_components/offers-carousel";
+import SecondHomeSlider from "@/app/_components/second-home-slider";
+import BrandCarousel from "@/app/_components/brand-slider/brand-slider";
+import WatchBanner from "@/app/_components/watch-banner";
+import FAQSection from "@/app/_components/faq";
+import Features from "@/app/_components/features";
 
 export default function Home() {
   const { data: banners = [], isFetching: isGettingBanners } = useBanner();

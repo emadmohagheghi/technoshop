@@ -4,7 +4,7 @@ import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import Image from "next/image";
 import { Banner } from "@/types/banner.types";
-import { Skeleton } from "../../ui/skeleton";
+import { Skeleton } from "../ui/skeleton";
 import { imageUrl } from "@/utils/product";
 import { ArrowRight2, ArrowLeft2 } from "iconsax-reactjs";
 
@@ -93,13 +93,13 @@ export default function HomeSlider({ banners, isLoading }: HomeSliderProps) {
         >
           <button
             onClick={() => instanceRef.current?.next()}
-            className="aspect-square w-full cursor-pointer rounded-[10px] bg-gray-300 flex justify-center items-center"
+            className="flex aspect-square w-full cursor-pointer items-center justify-center rounded-[10px] bg-gray-300"
           >
             <ArrowRight2 />
           </button>
           <button
             onClick={() => instanceRef.current?.prev()}
-            className="aspect-square w-full cursor-pointer rounded-[10px] bg-gray-300 flex justify-center items-center"
+            className="flex aspect-square w-full cursor-pointer items-center justify-center rounded-[10px] bg-gray-300"
           >
             <ArrowLeft2 />
           </button>

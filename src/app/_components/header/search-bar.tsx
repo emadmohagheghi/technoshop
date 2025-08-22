@@ -1,5 +1,5 @@
 "use client";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/app/_components/ui/input";
 import { cn } from "@/lib/utils";
 import { SearchNormal1 } from "iconsax-reactjs";
 import { useState } from "react";
@@ -19,9 +19,12 @@ export default function SearchBar() {
       >
         <Input
           placeholder="جستجو"
-          className={cn("size-full peer focus:placeholder:text-black/0 md:text-base", {
-            "border-brand-primary border-0 border-b-2": isFocused,
-          })}
+          className={cn(
+            "peer size-full focus:placeholder:text-black/0 md:text-base",
+            {
+              "border-brand-primary border-0 border-b-2": isFocused,
+            },
+          )}
           onFocus={() => {
             setIsFocused(true);
           }}
