@@ -18,7 +18,8 @@ export default function ProductCard({
   title_ir,
   isFavorite,
   url,
-}: Product) {
+  classname,
+}: Product & { classname?: string }) {
   const { sale_price, special_sale_price } = stockrecord;
   const discountPercentage = calculateDiscountPercentage(
     sale_price,
@@ -27,7 +28,12 @@ export default function ProductCard({
 
   return (
     <Link className="w-fit" href={url}>
-      <Card className="w-[119px] gap-0 bg-white p-2 shadow-none lg:w-[184px] lg:gap-2 lg:px-3.5 lg:py-4">
+      <Card
+        className={cn(
+          classname,
+          "w-[119px] gap-0 bg-white p-2 shadow-none lg:w-[184px] lg:gap-2 lg:px-3.5 lg:py-4",
+        )}
+      >
         <CardHeader className="flex h-4 items-center justify-between p-0">
           <Heart
             size={16}
@@ -50,7 +56,7 @@ export default function ProductCard({
             height={256}
             className="mx-auto aspect-square h-full w-full rounded-md object-cover mix-blend-multiply"
           />
-          <CardTitle className="line-clamp-2 p-0 text-center text-[10px] leading-[140%] font-medium lg:text-xs">
+          <CardTitle className="line-clamp-2 p-0 text-center text-[10px] leading-[140%] font-medium lg:text-xs h-8">
             {title_ir}
           </CardTitle>
         </CardContent>
