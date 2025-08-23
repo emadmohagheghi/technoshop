@@ -8,7 +8,7 @@ import {
   useGetNewestProducts,
   useGetSpecialProducts,
   useGetBestSellingProducts,
-} from "@/hooks/useProducts";
+} from "@/hooks/use-products";
 import { OffersCarousel } from "@/app/_components/offers-carousel";
 import SecondHomeSlider from "@/app/_components/second-home-slider";
 import BrandCarousel from "@/app/_components/brand-slider/brand-slider";
