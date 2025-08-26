@@ -3,7 +3,7 @@ import { Skeleton } from "./skeleton";
 
 export default function ProductCardSkeleton() {
   return (
-    <Card className="w-[119px] gap-0 bg-white p-2 shadow-none lg:w-[184px] lg:gap-2 lg:px-3.5 lg:py-4">
+    <Card className="w-full gap-0 bg-white p-2 shadow-none lg:w-[184px] lg:gap-2 lg:px-3.5 lg:py-4">
       <CardHeader className="flex h-4 items-center justify-between p-0">
         <Skeleton className="h-full w-full bg-gray-200" />
       </CardHeader>

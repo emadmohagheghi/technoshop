@@ -9,7 +9,7 @@ import { useMemo } from "react";
 
 export default function ProductsGrid() {
   const {
-    filters: { sort, category, brand, special },
+    filters: { sort, category, brand, special, price },
   } = useProductsFilters();
 
   // Memoize query string for performance
@@ -19,8 +19,9 @@ export default function ProductsGrid() {
     if (category) queryParams.append("categorySlug", category);
     if (brand) queryParams.append("brand", brand.toString());
     if (special) queryParams.append("special", "true");
+    if (price) queryParams.append("price", price);
     return queryParams.toString() ? `?${queryParams.toString()}` : "";
-  }, [sort, category, brand, special]);
+  }, [sort, category, brand, special, price]);
 
   const {
     data: products,
@@ -44,7 +45,7 @@ export default function ProductsGrid() {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-3 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
         {products.map((product: Product) => (
           <div
             key={product.id}
@@ -62,7 +63,7 @@ export default function ProductsGrid() {
 function ProductsGridSkeleton({ count = 12 }: { count?: number }) {
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 ">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
         {Array.from({ length: count }).map((_, index) => (
           <div key={index} className="flex w-full justify-center rounded-lg">
             <ProductCardSkeleton />

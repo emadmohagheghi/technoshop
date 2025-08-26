@@ -6,6 +6,7 @@ export interface ProductFilters {
   search: string | null;
   special: boolean;
   isAvailable: boolean;
+  price: string | null;
 }
 
 export interface ProductFiltersSetters {
@@ -16,6 +17,7 @@ export interface ProductFiltersSetters {
   setSearch: (value: string | null) => void;
   setSpecial: (value: boolean) => void;
   setIsAvailable: (value: boolean) => void;
+  setPrice: (min?: number | null, max?: number | null) => void;
 }
 
 export interface ProductFiltersActions {

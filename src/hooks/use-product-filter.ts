@@ -22,6 +22,7 @@ export function useProductsFilters(): UseProductFiltersReturn {
   const [search, setSearch] = useQueryState("search", parseAsString);
   const [sort, setSort] = useQueryState("sort", parseAsString.withDefault("1"));
   const [special, setSpecial] = useQueryState("special", parseAsString);
+  const [price, setPrice] = useQueryState("price", parseAsString);
 
   const clearFilters = () => {
     setCategory(null);
@@ -30,6 +31,7 @@ export function useProductsFilters(): UseProductFiltersReturn {
     setSearch(null);
     setSpecial(null);
     setIsAvailable(null);
+    setPrice(null);
   };
 
   const resetPage = () => {
@@ -45,6 +47,7 @@ export function useProductsFilters(): UseProductFiltersReturn {
       search,
       special: special === "true",
       isAvailable: isAvailable === "true",
+      price,
     },
     setters: {
       setCategory,
@@ -54,6 +57,19 @@ export function useProductsFilters(): UseProductFiltersReturn {
       setSearch,
       setSpecial: (value: boolean) => setSpecial(value ? "true" : null),
       setIsAvailable: (value: boolean) => setIsAvailable(value ? "true" : null),
+      setPrice: (min?: number | null, max?: number | null) => {
+        // اگر هیچ پارامتری نداده شده، فیلتر را پاک کن
+        if (min === null || (min === undefined && max === undefined)) {
+          setPrice(null);
+          return;
+        }
+
+        // مقادیر پیش‌فرض
+        const minPrice = min ?? 0;
+        const maxPrice = max ?? 500000000;
+
+        setPrice(`${minPrice},${maxPrice}`);
+      },
     },
     actions: {
       clearFilters,
