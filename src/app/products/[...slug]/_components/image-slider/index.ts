@@ -1,1 +1,1 @@
-export { default as ImageSlider } from './image-slider';
+export { default } from './image-slider';
