@@ -1,6 +1,10 @@
 import { readData } from "@/core/http-service";
 import { ProductDetail } from "@/types/product.types";
-import { ImageSlider } from "./_components/image-slider";
+import ImageSlider from "./_components/image-slider";
+import ProductInfo from "./_components/product-info";
+import Features from "./_components/features";
+import ProductTabs from "./_components/product-tabs/product-tabs";
+
 
 export default async function ProductPage({
   params,
@@ -14,17 +18,24 @@ export default async function ProductPage({
     `http://localhost:8000/api/catalog/product/${productSlug}/`,
   ).then((response) => response.data);
 
-  console.log(product);
+  const { images, stockrecord, title_ir, title_en } = product;
 
   return (
     <div>
       <div className="container p-3">
-        <div className="flex lg:flex-row gap-2 flex-col">
-          <div className="w-full lg:w-4/12 flex justify-center">
-            <ImageSlider images={product.images} />
+        <div className="flex flex-col gap-2 lg:flex-row">
+          <div className="flex w-full justify-center lg:w-4/12">
+            <ImageSlider images={images} />
           </div>
-          <div className="bg-brand-primary w-full lg:w-5/12">1</div>
-          <div className="bg-brand-primary-content w-full lg:w-3/12">2</div>
+          <div className="w-full lg:w-5/12">
+            <ProductInfo {...product} />
+          </div>
+          <div className="w-full lg:w-3/12">
+            <Features />
+          </div>
+        </div>
+        <div>
+          <ProductTabs />
         </div>
       </div>
     </div>
