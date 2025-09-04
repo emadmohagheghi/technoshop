@@ -11,6 +11,7 @@ import { Button } from "@/app/_components/ui/button";
 import { ArrowDown2, ArrowUp2 } from "iconsax-reactjs";
 import Comments from "./comments";
 import Review from "./review";
+import Specifications from "./specifications";
 
 export default function ProductTabs() {
   const [showMore, setShowMore] = useState(false);
@@ -102,8 +103,9 @@ export default function ProductTabs() {
               contentRefs.current["tab1"] = el;
             }}
             data-tab-key="tab1"
-            className="h-180"
-          ></div>
+          >
+            <Specifications />
+          </div>
         </TabsContent>
         <TabsContent
           value="tab2"
