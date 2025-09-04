@@ -10,6 +10,7 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/app/_components/ui/button";
 import { ArrowDown2, ArrowUp2 } from "iconsax-reactjs";
 import Comments from "./comments";
+import Review from "./review";
 
 export default function ProductTabs() {
   const [showMore, setShowMore] = useState(false);
@@ -116,7 +117,7 @@ export default function ProductTabs() {
             }}
             data-tab-key="tab2"
           >
-            asd
+            <Review />
           </div>
         </TabsContent>
         <TabsContent
