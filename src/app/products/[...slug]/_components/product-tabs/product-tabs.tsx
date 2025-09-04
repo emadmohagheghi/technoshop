@@ -8,6 +8,8 @@ import {
 import { cn } from "@/lib/utils";
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/app/_components/ui/button";
+import { ArrowDown2, ArrowUp2 } from "iconsax-reactjs";
+import Comments from "./comments";
 
 export default function ProductTabs() {
   const [showMore, setShowMore] = useState(false);
@@ -91,7 +93,7 @@ export default function ProductTabs() {
         <TabsContent
           value="tab1"
           className={cn({
-            "max-h-120 overflow-hidden": !showMore && shouldShowButtons,
+            "max-h-160 overflow-hidden": !showMore && shouldShowButtons,
           })}
         >
           <div
@@ -120,7 +122,7 @@ export default function ProductTabs() {
         <TabsContent
           value="tab3"
           className={cn({
-            "max-h-60 overflow-hidden": !showMore && shouldShowButtons,
+            "max-h-160 overflow-hidden": !showMore && shouldShowButtons,
           })}
         >
           <div
@@ -129,7 +131,7 @@ export default function ProductTabs() {
             }}
             data-tab-key="tab3"
           >
-            Reviews content
+            <Comments />
           </div>
         </TabsContent>
       </Tabs>
@@ -141,6 +143,7 @@ export default function ProductTabs() {
             onClick={() => setShowMore(false)}
           >
             نمایش کمتر
+            <ArrowUp2 />
           </Button>
         ) : (
           <Button
@@ -149,6 +152,7 @@ export default function ProductTabs() {
             onClick={() => setShowMore(true)}
           >
             نمایش بیشتر
+            <ArrowDown2 />
           </Button>
         ))}
     </div>
