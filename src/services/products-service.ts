@@ -29,3 +29,10 @@ export async function getBestSellingProducts() {
   );
   return res.data.data;
 }
+
+export async function getProductByShortSlug(short_slug: number) {
+  const res = await readData<ApiFilterResultType<Product>>(
+    `http://localhost:8000/api/catalog/product/${short_slug}`
+  );
+  return res.data.data;
+}

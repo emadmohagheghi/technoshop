@@ -4,6 +4,7 @@ import {
   getSpecialProducts,
   getNewestProducts,
   getBestSellingProducts,
+  getProductByShortSlug,
 } from "@/services/products-service";
 
 export function useGetProducts(query?: string) {
@@ -31,5 +32,12 @@ export function useGetSpecialProducts() {
   return useQuery({
     queryKey: ["special-products"],
     queryFn: () => getSpecialProducts(),
+  });
+}
+
+export function useGetProductByShortSlug(shortSlug: number) {
+  return useQuery({
+    queryKey: ["products", shortSlug],
+    queryFn: () => getProductByShortSlug(shortSlug),
   });
 }
