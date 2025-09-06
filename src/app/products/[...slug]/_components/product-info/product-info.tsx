@@ -8,6 +8,7 @@ export default function ProductInfo({
   title_en,
   title_ir,
   stockrecord,
+  short_slug,
 }: ProductDetail) {
   const { special_sale_price, sale_price } = stockrecord;
   return (
@@ -39,7 +40,7 @@ export default function ProductInfo({
         </span>
       </p>
       <div className="flex w-full gap-3">
-        <AddToCart />
+        <AddToCart short_slug={short_slug} />
         <Comparison />
       </div>
     </div>
