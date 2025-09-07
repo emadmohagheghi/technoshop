@@ -18,14 +18,13 @@ export default async function ProductPage({
     `http://localhost:8000/api/catalog/product/${productSlug}/`,
   ).then((response) => response.data);
 
-  const { images, stockrecord, title_ir, title_en } = product;
 
   return (
     <div>
       <div className="container p-3">
         <div className="flex flex-col gap-2 lg:flex-row">
           <div className="flex w-full justify-center lg:w-4/12">
-            <ImageSlider images={images} />
+            <ImageSlider images={product.images} />
           </div>
           <div className="w-full lg:w-5/12">
             <ProductInfo {...product} />

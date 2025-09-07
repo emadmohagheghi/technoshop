@@ -69,7 +69,7 @@ function TabsList({
       ref={containerRef}
       data-slot="tabs-list"
       className={cn(
-        "relative inline-flex w-full items-center justify-start rounded-lg bg-gray-100 p-2 text-black gap-1.5",
+        "relative inline-flex w-full items-center justify-start gap-1.5 rounded-lg bg-gray-100 p-2 text-black",
         className,
       )}
       {...props}
@@ -88,7 +88,7 @@ function TabsList({
             buttonsRef.current[index] = el;
           },
           onClick: () => setActiveTab(childElement.props.value),
-        } as any);
+        } as Partial<React.ComponentProps<typeof TabsPrimitive.Trigger>>);
       })}
     </TabsPrimitive.List>
   );
