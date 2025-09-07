@@ -26,7 +26,6 @@ const specifications = [
 ];
 
 export default function Features() {
-  console.log("hi")
   return (
     <div className="border-brand-primary overflow-hidden rounded-lg space-y-4 pt-10">
       <h3 className="text-base font-medium lg:text-xl">ویژگی ها</h3>

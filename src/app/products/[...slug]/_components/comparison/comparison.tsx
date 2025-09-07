@@ -3,7 +3,7 @@ import { ChartSquare } from "iconsax-reactjs";
 
 export default function Comparison() {
   return (
-    <Button className="cursor-pointer text-xs lg:text-base !p-4 xs:!p-8 " variant="secondary">
+    <Button className="cursor-pointer text-xs lg:text-base py-8 " variant="secondary">
       مقایسه کن
       <ChartSquare className="size-5 lg:size-6" size={24} />
     </Button>

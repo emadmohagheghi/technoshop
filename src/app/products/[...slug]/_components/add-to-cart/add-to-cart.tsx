@@ -2,20 +2,21 @@
 
 import { Button } from "@/app/_components/ui/button";
 import { ShoppingCart, Add, Minus, Trash } from "iconsax-reactjs";
-import { useCart } from "@/hooks/use-cart";
+import { useCartStore } from "@/stores/cart.store";
 import { ProductDetail } from "@/types/product.types";
 import { toast } from "sonner";
 
 export default function AddToCart({
   short_slug,
 }: Pick<ProductDetail, "short_slug">) {
-  const { addOne, getQuantity, removeOne } = useCart();
-  const quantity = getQuantity({ short_slug });
+  const addOne = useCartStore((state) => state.addOne);
+  const removeOne = useCartStore((state) => state.removeOne);
+  const quantity = useCartStore((state) => state.getQuantity({ short_slug }));
 
   if (quantity <= 0) {
     return (
       <Button
-        className="bg-brand-primary hover:bg-brand-primary-focus w-60 py-8 text-sm font-bold lg:text-base"
+        className="bg-brand-primary hover:bg-brand-primary-focus xs:w-60 py-8 text-sm font-bold lg:text-base"
         onClick={() => {
           addOne({ short_slug });
           toast("به سبد خرید اضافه شد");

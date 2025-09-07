@@ -3,6 +3,8 @@ import { Button } from "../ui/button";
 import { ShoppingCart, LoginCurve } from "iconsax-reactjs";
 import Navbar from "./navbar";
 import SearchBar from "./search-bar";
+import CartBtn from "./cart-btn";
+import Link from "next/link";
 
 export default function Header() {
   return (
@@ -13,24 +15,28 @@ export default function Header() {
           <div className="mx-auto max-w-[1440px]">
             <div className="flex w-full items-center justify-between gap-4 p-5">
               <div className="h-[63px] w-[156px]">
-                <Image
-                  src="/images/logo.svg"
-                  alt="Logo"
-                  width={156}
-                  height={63}
-                />
+                <Link href="/">
+                  <Image
+                    src="/images/logo.svg"
+                    alt="Logo"
+                    width={156}
+                    height={63}
+                  />
+                </Link>
               </div>
               <SearchBar />
               <div className="flex items-center">
-                <Button
+                <Link href="/login">
+                  <Button
                   size="lg"
-                  className="bg-brand-primary hover:bg-brand-primary-focus text-base"
+                  className="bg-brand-primary hover:bg-brand-primary-focus text-base cursor-pointer"
                 >
                   <LoginCurve size="24" />
                   ورود / ثبت نام
                 </Button>
+                </Link>
                 <span className="mx-4 h-[40px] w-0.25 bg-gray-600"></span>
-                <ShoppingCart size="32" />
+                <CartBtn />
               </div>
             </div>
           </div>
@@ -42,7 +48,7 @@ export default function Header() {
         <div className="fixed right-0 left-0 p-3 z-20 bg-[#fff]">
           <div className="relative h-12 flex-1 rounded-md border">
             <SearchBar />
-            
+
           </div>
         </div>
         <Navbar />
