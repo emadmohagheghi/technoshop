@@ -137,7 +137,7 @@ export default function CartBtn() {
   return (
     <>
       {/* برای صفحات کوچک تر از lg */}
-      <Link href="/cart" className="lg:hidden">
+      <Link href="/checkout/cart" className="lg:hidden">
         <div
           className="relative cursor-pointer"
         >
@@ -197,7 +197,7 @@ export default function CartBtn() {
                   </div>
 
                   <div className="border-t pt-3">
-                    <Link href="/cart">
+                    <Link href="/checkout/cart">
                       <Button className="bg-brand-primary hover:bg-brand-primary-focus w-full">
                         مشاهده سبد خرید
                       </Button>
