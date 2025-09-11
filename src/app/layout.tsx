@@ -4,7 +4,6 @@ import "./globals.css";
 import { Toaster } from "@/app/_components/ui/sonner";
 import Header from "@/app/_components/header/header";
 import QueryProvider from "@/providers/react-query-provider";
-import GetHeaderData from "@/providers/header-data-provider";
 import Footer from "@/app/_components/footer";
 
 const iranyekan = localFont({
@@ -85,7 +84,6 @@ export default function RootLayout({
     <html lang="fa" dir="rtl">
       <body className={`${iranyekan.variable} antialiased`}>
         <QueryProvider>
-          <GetHeaderData />
           <Header />
           <main className="pt-[62px] lg:pt-[175px]">{children}</main>
           <Footer />
