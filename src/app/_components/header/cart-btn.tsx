@@ -4,7 +4,7 @@ import { ShoppingCart, Add, Minus, Trash } from "iconsax-reactjs";
 import { useCartStore } from "@/stores/cart.store";
 import { Badge } from "@/app/_components/ui/badge";
 import { Button } from "@/app/_components/ui/button";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,6 @@ import {
 import { useGetProductByShortSlug } from "@/hooks/use-products";
 import { imageUrl } from "@/utils/product";
 
-// کامپوننت نمایش آیتم سبد خرید
 function CartItem({
   short_slug,
   quantity,
@@ -129,18 +128,22 @@ export default function CartBtn() {
   const totalItems = useCartStore((state) => state.getTotalItems());
   const cart = useCartStore((state) => state.cart);
   const router = useRouter();
+  const [popoverOpen, setPopoverOpen] = useState(false);
 
   useEffect(() => {
     useCartStore.persist.rehydrate();
   }, []);
 
+  const handleViewCart = () => {
+    setPopoverOpen(false); // بستن popover
+    router.push("/checkout/cart");
+  };
+
   return (
     <>
       {/* برای صفحات کوچک تر از lg */}
       <Link href="/checkout/cart" className="lg:hidden">
-        <div
-          className="relative cursor-pointer"
-        >
+        <div className="relative cursor-pointer">
           <ShoppingCart size="32" />
           {totalItems > 0 && (
             <Badge
@@ -155,7 +158,7 @@ export default function CartBtn() {
 
       {/* برای صفحات lg و بزرگتر */}
       <div className="hidden lg:block">
-        <Popover>
+        <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
           <PopoverTrigger asChild>
             <div className="relative cursor-pointer">
               <ShoppingCart size="32" />
@@ -197,11 +200,12 @@ export default function CartBtn() {
                   </div>
 
                   <div className="border-t pt-3">
-                    <Link href="/checkout/cart">
-                      <Button className="bg-brand-primary hover:bg-brand-primary-focus w-full">
-                        مشاهده سبد خرید
-                      </Button>
-                    </Link>
+                    <Button
+                      className="bg-brand-primary hover:bg-brand-primary-focus w-full"
+                      onClick={handleViewCart}
+                    >
+                      مشاهده سبد خرید
+                    </Button>
                   </div>
                 </>
               )}

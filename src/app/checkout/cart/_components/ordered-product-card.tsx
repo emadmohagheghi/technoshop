@@ -1,5 +1,4 @@
 "use client";
-import { useGetProductByShortSlug } from "@/hooks/use-products";
 import { ProductDetail } from "@/types/product.types";
 import { Button } from "@/app/_components/ui/button";
 import Image from "next/image";
@@ -15,48 +14,16 @@ import {
 import Link from "next/link";
 
 export default function ProductCard({
-  short_slug,
+  product,
   quantity,
   onUpdateQuantity,
   onRemove,
 }: {
-  short_slug: Pick<ProductDetail, "short_slug">;
+  product: ProductDetail;
   quantity: number;
   onUpdateQuantity: (newQuantity: number) => void;
   onRemove: () => void;
 }) {
-  const {
-    data: product,
-    isLoading,
-    error,
-  } = useGetProductByShortSlug(short_slug.short_slug);
-
-  if (isLoading) {
-    return (
-      <div className="flex animate-pulse items-center gap-4 rounded-2xl border bg-gradient-to-br from-gray-50 to-gray-100 p-4">
-        <div className="h-24 w-24 rounded-xl bg-gray-200"></div>
-        <div className="flex-1 space-y-2">
-          <div className="h-4 w-3/4 rounded bg-gray-200"></div>
-          <div className="h-3 w-1/2 rounded bg-gray-200"></div>
-          <div className="h-4 w-1/4 rounded bg-gray-200"></div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !product) {
-    return (
-      <div className="flex items-center gap-4 rounded-2xl bg-gradient-to-br from-red-50 to-red-100 p-4">
-        <div className="flex h-24 w-24 items-center justify-center rounded-xl bg-red-200">
-          <span className="text-sm text-red-500">خطا</span>
-        </div>
-        <div className="flex-1">
-          <p className="font-medium text-red-600">محصول یافت نشد</p>
-        </div>
-      </div>
-    );
-  }
-
   const hasSpecialPrice =
     product.stockrecord.special_sale_price &&
     product.stockrecord.special_sale_price < product.stockrecord.sale_price;
@@ -134,7 +101,7 @@ export default function ProductCard({
         <div className="flex items-center gap-5 text-sm text-gray-700">
           {hasSpecialPrice && (
             <h5 className="text-error text-sm font-bold line-through">
-              {product.stockrecord.special_sale_price.toLocaleString()}
+              {product.stockrecord.sale_price.toLocaleString()}
             </h5>
           )}
           <h5 className="text-base font-bold text-black">
