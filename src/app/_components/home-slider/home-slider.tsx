@@ -83,7 +83,7 @@ export default function HomeSlider({ banners, isLoading }: HomeSliderProps) {
               alt={banner.title}
               width={912}
               height={412}
-              className="w-full rounded-xl"
+              className="w-full"
             />
           </div>
         ))}
