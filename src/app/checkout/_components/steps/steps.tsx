@@ -184,16 +184,6 @@ export default function Steps() {
             })}
           </ul>
         </nav>
-
-        {/* Progress Percentage */}
-        <div className="mt-6 flex justify-center">
-          <div className="bg-muted/50 rounded-full border px-4 py-2 backdrop-blur-sm">
-            <span className="text-muted-foreground text-sm font-medium">
-              پیشرفت:{" "}
-              {Math.round(((currentStepIndex + 1) / steps.length) * 100)}%
-            </span>
-          </div>
-        </div>
       </div>
     </div>
   );

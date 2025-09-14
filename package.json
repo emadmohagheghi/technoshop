@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.1",
     "@radix-ui/react-accordion": "^1.2.11",
     "@radix-ui/react-checkbox": "^1.3.3",
     "@radix-ui/react-dialog": "^1.1.14",
@@ -29,15 +30,16 @@
     "cmdk": "^1.1.1",
     "iconsax-reactjs": "^0.0.8",
     "keen-slider": "^6.8.6",
-    "ky": "^1.10.0",
     "lucide-react": "^0.539.0",
     "next": "15.4.6",
     "next-themes": "^0.4.6",
     "nuqs": "^2.5.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-hook-form": "^7.62.0",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
+    "valibot": "^1.1.0",
     "vaul": "^1.1.2",
     "zustand": "^5.0.7"
   },

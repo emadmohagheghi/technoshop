@@ -2,9 +2,10 @@
 import { Button } from "@/app/_components/ui/button";
 import { Card, CardContent } from "@/app/_components/ui/card";
 import { CartItem } from "@/stores/cart.store";
-import { useShippingStore } from "@/stores/shipping.store";
 import { ProductDetail } from "@/types/product.types";
 import { useRouter, usePathname } from "next/navigation";
+import { useFormContext } from "react-hook-form";
+import { ShippingAddressForm } from "@/app/checkout/shipping/_types/shipping-info.schema";
 import { toast } from "sonner";
 
 interface OrderSummaryProps {
@@ -13,9 +14,6 @@ interface OrderSummaryProps {
 }
 
 export default function OrderSummary({ cart, products }: OrderSummaryProps) {
-  const { shippingAddress, getShippingCost, getSelectedShipping } =
-    useShippingStore();
-
   const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
 
   const totalPrice = cart.reduce((total, cartItem) => {
@@ -34,29 +32,39 @@ export default function OrderSummary({ cart, products }: OrderSummaryProps) {
     return total;
   }, 0);
 
-  const shippingCost = getShippingCost();
-  const selectedShipping = getSelectedShipping();
-  const finalTotal = totalPrice + shippingCost;
+  const finalTotal = totalPrice;
 
   const router = useRouter();
   const currentPath = usePathname();
 
-  // Check if shipping information is complete
+  let formMethods = null;
+  try {
+    formMethods = useFormContext<ShippingAddressForm>();
+  } catch (error) {
+  }
+
   const isShippingInfoComplete = () => {
-    return (
-      shippingAddress.fullName.trim() !== "" &&
-      shippingAddress.phone.trim() !== "" &&
-      shippingAddress.city.trim() !== "" &&
-      shippingAddress.address.trim() !== "" &&
-      shippingAddress.postalCode.trim() !== ""
-    );
+    if (!formMethods) return false;
+
+    const values = formMethods.getValues();
+    const requiredFields = [
+      "fullName",
+      "phone",
+      "city",
+      "postalCode",
+      "address",
+    ];
+    const allFilled = requiredFields.every((field) => {
+      const value = values[field as keyof ShippingAddressForm];
+      return value && value.toString().trim().length > 0;
+    });
+    const noErrors = Object.keys(formMethods.formState.errors).length === 0;
+    return allFilled && noErrors;
   };
 
-  // Check if user can proceed to next step
   const canProceedToNext = () => {
     if (cart.length === 0) return false;
 
-    // If in shipping page, check if shipping info is complete
     if (currentPath.includes("/checkout/shipping")) {
       return isShippingInfoComplete();
     }
@@ -96,7 +104,6 @@ export default function OrderSummary({ cart, products }: OrderSummaryProps) {
   };
 
   const handleContinueToNext = () => {
-    // If in shipping page and info is incomplete, show error
     if (
       currentPath.includes("/checkout/shipping") &&
       !isShippingInfoComplete()
@@ -113,7 +120,6 @@ export default function OrderSummary({ cart, products }: OrderSummaryProps) {
     <Card className="">
       <CardContent className="space-y-4 p-6">
         <h3 className="text-lg font-semibold">خلاصه سفارش</h3>
-
         <div className="space-y-2">
           <div className="flex justify-between">
             <span>تعداد کالا:</span>
@@ -123,21 +129,7 @@ export default function OrderSummary({ cart, products }: OrderSummaryProps) {
             <span>جمع کل:</span>
             <span>{totalPrice.toLocaleString()} تومان</span>
           </div>
-          <div className="flex justify-between">
-            <span>هزینه ارسال:</span>
-            <div className="flex text-left">
-              {shippingCost === 0 ? (
-                <span className="text-green-600">رایگان</span>
-              ) : (
-                <span>{shippingCost.toLocaleString()} تومان</span>
-              )}
-              {selectedShipping && (
-                <div className="text-sm text-gray-500">
-                  ({selectedShipping.name})
-                </div>
-              )}
-            </div>
-          </div>
+
           <hr />
           <div className="flex justify-between text-lg font-semibold">
             <span>مجموع نهایی:</span>
@@ -146,7 +138,7 @@ export default function OrderSummary({ cart, products }: OrderSummaryProps) {
         </div>
 
         <Button
-          className="w-full bg-brand-primary hover:bg-brand-primary-focus"
+          className="bg-brand-primary hover:bg-brand-primary-focus w-full"
           size="lg"
           disabled={!canProceedToNext()}
           onClick={handleContinueToNext}
@@ -154,7 +146,6 @@ export default function OrderSummary({ cart, products }: OrderSummaryProps) {
           ادامه فرآیند خرید
         </Button>
 
-        {/* Show helper message when in shipping page and info is incomplete */}
         {currentPath.includes("/checkout/shipping") &&
           !isShippingInfoComplete() && (
             <p className="text-center text-sm text-red-500">
@@ -162,7 +153,12 @@ export default function OrderSummary({ cart, products }: OrderSummaryProps) {
             </p>
           )}
         {doseHavePrevStep && (
-          <Button className="w-full border-2 border-brand-primary" variant="outline" size="lg" onClick={handlePrevStep}>
+          <Button
+            className="border-brand-primary w-full border-2"
+            variant="outline"
+            size="lg"
+            onClick={handlePrevStep}
+          >
             بازگشت به مرحله قبل
           </Button>
         )}
