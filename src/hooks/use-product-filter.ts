@@ -19,7 +19,7 @@ export function useProductsFilters(): UseProductFiltersReturn {
   );
   const [category, setCategory] = useQueryState("category", parseAsString);
   const [page, setPage] = useQueryState("page", parseAsInteger.withDefault(1));
-  const [search, setSearch] = useQueryState("search", parseAsString);
+  const [search, setSearch] = useQueryState("q", parseAsString);
   const [sort, setSort] = useQueryState("sort", parseAsString.withDefault("1"));
   const [special, setSpecial] = useQueryState("special", parseAsString);
   const [price, setPrice] = useQueryState("price", parseAsString);
@@ -28,7 +28,6 @@ export function useProductsFilters(): UseProductFiltersReturn {
     setCategory(null);
     setBrand(null);
     setPage(1);
-    setSearch(null);
     setSpecial(null);
     setIsAvailable(null);
     setPrice(null);

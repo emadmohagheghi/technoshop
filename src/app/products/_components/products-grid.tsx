@@ -9,10 +9,9 @@ import { useMemo } from "react";
 
 export default function ProductsGrid() {
   const {
-    filters: { sort, category, brand, special, price },
+    filters: { sort, category, brand, special, price, search },
   } = useProductsFilters();
 
-  // Memoize query string for performance
   const queryString = useMemo(() => {
     const queryParams = new URLSearchParams();
     if (sort) queryParams.append("sort", sort);
@@ -20,8 +19,9 @@ export default function ProductsGrid() {
     if (brand) queryParams.append("brand", brand.toString());
     if (special) queryParams.append("special", "true");
     if (price) queryParams.append("price", price);
+    if (search) queryParams.append("search", search);
     return queryParams.toString() ? `?${queryParams.toString()}` : "";
-  }, [sort, category, brand, special, price]);
+  }, [sort, category, brand, special, price, search]);
 
   const {
     data: products,

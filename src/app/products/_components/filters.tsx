@@ -23,11 +23,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/app/_components/ui/accordion";
+import { Add } from "iconsax-reactjs";
 
 const FilterContent = () => {
   const {
-    filters: { brand, category, special, price },
-    setters: { setBrand, setCategory, setSpecial, setPrice },
+    filters: { brand, category, special, price, search },
+    setters: { setBrand, setCategory, setSpecial, setPrice, setSearch },
     actions: { clearFilters },
   } = useProductsFilters();
 
@@ -77,6 +78,18 @@ const FilterContent = () => {
           پاک کردن فیلترها
         </Button>
       </div>
+      {search && (
+        <div className="mb-2 flex items-center justify-between">
+          <p>جستجو برای: </p>
+          <h1
+            onClick={() => setSearch("")}
+            className="hover:border-error group flex cursor-pointer rounded-full border px-2 py-1 text-xs transition-colors duration-200"
+          >
+            <Add className="group-hover:text-error size-4 rotate-45" />
+            {search}
+          </h1>
+        </div>
+      )}
       <div className="flex w-full items-center justify-between border-b py-4">
         <Label htmlFor="special-offers">فروش ویژه</Label>
         <Switch
@@ -193,7 +206,7 @@ export default function Filters() {
         <DrawerTrigger asChild>
           <Button
             variant="outline"
-            className="w-full flex-1 !rounded-full lg:hidden bg-brand-primary text-white"
+            className="bg-brand-primary w-full flex-1 !rounded-full text-white lg:hidden"
           >
             فیلتر ها
           </Button>
