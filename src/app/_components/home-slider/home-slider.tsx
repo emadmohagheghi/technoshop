@@ -21,6 +21,7 @@ export default function HomeSlider({ banners, isLoading }: HomeSliderProps) {
     (banner) => banner.position === "HOME_SIDE_BANNER",
   );
 
+
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
     {
       initial: 0,

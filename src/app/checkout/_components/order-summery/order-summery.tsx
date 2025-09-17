@@ -38,10 +38,7 @@ export default function OrderSummary({ cart, products }: OrderSummaryProps) {
   const currentPath = usePathname();
 
   let formMethods = null;
-  try {
-    formMethods = useFormContext<ShippingAddressForm>();
-  } catch (error) {
-  }
+  formMethods = useFormContext<ShippingAddressForm>();
 
   const isShippingInfoComplete = () => {
     if (!formMethods) return false;

@@ -39,6 +39,7 @@ export default function SearchBar() {
   const router = useRouter();
   const search_histories = useUserStore(state => state.user?.search_histories)
 
+
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!value) return;
     if (e.key !== "Enter") return;

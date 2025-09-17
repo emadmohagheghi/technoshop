@@ -29,6 +29,7 @@ export default function Home() {
     isFetching: isGettingBestSellingProducts,
   } = useGetBestSellingProducts();
 
+
   return (
     <div className="">
       <div className="container mb-6 space-y-6 p-3 lg:space-y-12">

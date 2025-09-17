@@ -44,7 +44,10 @@ export const errorHandler: Record<number, ApiErrorHandler> = {
     (errorData.errors ? validationErrorStrategy : badRequestErrorStrategy)(
       errorData,
     ),
-  403: unauthorizedErrorStrategy,
-  404: notFoundErrorStrategy,
-  500: unhandledExceptionStrategy,
+  401: unauthorizedErrorStrategy, // احراز هویت انجام نشده
+  403: unauthorizedErrorStrategy, // عدم دسترسی
+  404: notFoundErrorStrategy, // یافت نشد
+  500: unhandledExceptionStrategy, // خطای سرور
+  502: unhandledExceptionStrategy, // Bad Gateway
+  503: unhandledExceptionStrategy, // Service Unavailable
 };
