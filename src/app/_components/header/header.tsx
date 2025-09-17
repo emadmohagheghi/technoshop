@@ -1,12 +1,17 @@
+"use client";
 import Image from "next/image";
 import { Button } from "../ui/button";
-import { ShoppingCart, LoginCurve } from "iconsax-reactjs";
 import Navbar from "./navbar";
 import SearchBar from "./search-bar";
 import CartBtn from "./cart-btn";
 import Link from "next/link";
+import { useUserStore } from "@/stores/user.store";
+import { UserCircle } from "lucide-react";
+import SpinnerLoading from "../ui/spinner-loading";
 
 export default function Header() {
+  const { user, status } = useUserStore();
+
   return (
     <>
       {/* desktop */}
@@ -26,15 +31,33 @@ export default function Header() {
               </div>
               <SearchBar />
               <div className="flex items-center">
-                <Link href="/login">
-                  <Button
-                  size="lg"
-                  className="bg-brand-primary hover:bg-brand-primary-focus text-base cursor-pointer"
-                >
-                  <LoginCurve size="24" />
-                  ورود / ثبت نام
-                </Button>
-                </Link>
+                {status === "loading" ? (
+                  <>
+                    <Button size="icon" className="bg-brand-primary border">
+                      <SpinnerLoading className="size-6" />
+                    </Button>
+                  </>
+                ) : user ? (
+                  <Link href="/profile">
+                    <Button
+                      size="lg"
+                      className="bg-brand-primary hover:bg-brand-primary-focus cursor-pointer text-base"
+                    >
+                      <UserCircle size="24" />
+                      پروفایل
+                    </Button>
+                  </Link>
+                ) : (
+                  <Link href="/auth/login">
+                    <Button
+                      size="lg"
+                      className="bg-brand-primary hover:bg-brand-primary-focus cursor-pointer text-base"
+                    >
+                      <UserCircle size="24" />
+                      ورود
+                    </Button>
+                  </Link>
+                )}
                 <span className="mx-4 h-[40px] w-0.25 bg-gray-600"></span>
                 <CartBtn />
               </div>
@@ -45,10 +68,9 @@ export default function Header() {
       </header>
       {/* mobile */}
       <header className="block lg:hidden">
-        <div className="fixed right-0 left-0 p-3 z-20 bg-[#fff]">
+        <div className="fixed right-0 left-0 z-20 bg-[#fff] p-3">
           <div className="relative h-12 flex-1 rounded-md border">
             <SearchBar />
-
           </div>
         </div>
         <Navbar />

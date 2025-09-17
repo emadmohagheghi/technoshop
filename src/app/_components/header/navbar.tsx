@@ -5,10 +5,13 @@ import { ArrowDown2, Home, Category, User } from "iconsax-reactjs";
 import { useEffect, useState } from "react";
 import CartBtn from "./cart-btn";
 import Link from "next/link";
+import { useUserStore } from "@/stores/user.store";
+import SpinnerLoading from "../ui/spinner-loading";
 
 export default function Navbar() {
   const [isScrollingUp, setIsScrollingUp] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const { status } = useUserStore();
 
   const handleScroll = () => {
     if (window.scrollY < lastScrollY) {
@@ -72,10 +75,19 @@ export default function Navbar() {
               <p>سبد خرید</p>
             </li>
             <li>
-              <Link href="/login">
-                <User size="30" color="gray" />
-                <p>ورود</p>
-              </Link>
+              {status === "loading" ? (
+                <SpinnerLoading className="size-6" />
+              ) : status === "authenticated" ? (
+                <Link href="/profile">
+                  <User size="30" color="gray" />
+                  <p>پروفایل</p>
+                </Link>
+              ) : (
+                <Link href="/auth/login">
+                  <User size="30" color="gray" />
+                  <p>ورود</p>
+                </Link>
+              )}
             </li>
           </ul>
         </nav>
