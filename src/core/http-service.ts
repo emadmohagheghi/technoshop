@@ -35,10 +35,11 @@ httpService.interceptors.response.use(
       if (statusCode === 401) {
         // یک response موفق شبیه‌سازی کنیم با اطلاعات عدم احراز هویت
         return {
-          success: false,
           data: {
-            is_authenticated: false,
+            success: false,
             message: "User not authenticated",
+            status: 401,
+            data: null,
           },
         };
       }

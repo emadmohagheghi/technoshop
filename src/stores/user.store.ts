@@ -14,38 +14,15 @@ interface SessionState {
 
 const fetchCurrentUser = async () => {
   try {
-    // استفاده از test-auth endpoint برای بررسی authentication
-    const response = await readData<{
-      message: string;
-      user_id: number;
-      username: string;
-      is_authenticated: boolean;
-      is_superuser: boolean;
-    }>("/api/users/test-auth/");
+    const response = await readData<UserInfo>("/api/users/request/current/");
 
-    // بررسی اینکه آیا کاربر احراز هویت شده یا خیر
-    if (response.data?.is_authenticated === true) {
-      const data = response.data;
-      const user: UserInfo = {
-        full_name: data.username, // استفاده از username به عنوان full_name موقتی
-        first_name: "",
-        last_name: "",
-        email: null,
-        phone: "",
-        national_code: null,
-        is_superuser: data.is_superuser,
-        is_verify: true,
-        has_password: true,
-        search_histories: [],
-      };
-
+    if (response.data) {
       return {
-        user,
+        user: response.data,
         status: "authenticated" as AuthStatus,
       };
     }
 
-    // اگر کاربر احراز هویت نشده (وضعیت عادی)
     return {
       user: null,
       status: "unauthenticated" as AuthStatus,
@@ -58,7 +35,7 @@ const fetchCurrentUser = async () => {
   }
 };
 
-export const useUserStore = create<SessionState>((set, get) => ({
+export const useUserStore = create<SessionState>((set) => ({
   user: null,
   status: "loading" as AuthStatus,
 
