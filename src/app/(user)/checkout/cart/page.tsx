@@ -3,7 +3,6 @@ import { useCartStore } from "@/stores/cart.store";
 import { useQueries } from "@tanstack/react-query";
 import { getProductByShortSlug } from "@/services/products-service";
 import OrderedProducts from "./_components/ordered-products";
-import OrderSummary from "../_components/order-summery/order-summery";
 
 export default function CartPage() {
   const { cart, addOne, removeOne, removeAllOfProduct } = useCartStore();

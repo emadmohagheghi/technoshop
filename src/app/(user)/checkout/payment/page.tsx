@@ -10,7 +10,6 @@ import {
 import { RadioGroup, RadioGroupItem } from "@/app/_components/ui/radio-group";
 import { Label } from "@/app/_components/ui/label";
 import { CreditCard, Wallet, Building } from "lucide-react";
-import { useCartStore } from "@/stores/cart.store";
 
 const paymentMethods = [
   {

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { SortOptions, ProductsGrid, Filters } from "./_components";
-import SpinnerLoading from "../_components/ui/spinner-loading";
+import SpinnerLoading from "@/app/_components/ui/spinner-loading";
 
 function ProductsContent() {
   return (

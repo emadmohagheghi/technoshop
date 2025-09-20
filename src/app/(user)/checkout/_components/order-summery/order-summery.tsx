@@ -5,7 +5,7 @@ import { CartItem } from "@/stores/cart.store";
 import { ProductDetail } from "@/types/product.types";
 import { useRouter, usePathname } from "next/navigation";
 import { useFormContext } from "react-hook-form";
-import { ShippingAddressForm } from "@/app/checkout/shipping/_types/shipping-info.schema";
+import { ShippingAddressForm } from "../../shipping/_types/shipping-info.schema";
 import { toast } from "sonner";
 
 interface OrderSummaryProps {

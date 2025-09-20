@@ -14,26 +14,21 @@ type CustomAxiosRequestConfig = InternalAxiosRequestConfig & {
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8000";
 
-console.log("🔗 API_URL:", API_URL);
 
 const httpService = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true, // مهم: برای ارسال و دریافت cookies
+  withCredentials: true,
 });
 
-// Cookie-based authentication - no JWT handling needed
-
-// Request interceptor - فقط Cookie authentication
 httpService.interceptors.request.use(
   async (config: CustomAxiosRequestConfig) => {
     if (config.skipAuth) {
       return config;
     }
 
-    // فقط Cookie authentication - هیچ JWT handling نیست
     config.withCredentials = true;
 
     return config;
@@ -43,7 +38,6 @@ httpService.interceptors.request.use(
 
 httpService.interceptors.response.use(
   (response) => {
-    console.log("✅ API Response:", response.config.url, response.status);
     return response;
   },
   (error) => {
