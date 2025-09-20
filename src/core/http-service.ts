@@ -1,8 +1,5 @@
 import { ApiError } from "@/types/http-errors.types";
-import axios, {
-  AxiosRequestConfig,
-  AxiosRequestHeaders,
-} from "axios";
+import axios, { AxiosRequestConfig, AxiosRequestHeaders } from "axios";
 import { ApiResponseType } from "@/types/response";
 
 import { errorHandler, networkErrorStrategy } from "./http-error-strategies";
@@ -30,14 +27,6 @@ httpService.interceptors.response.use(
     return response;
   },
   (error) => {
-    console.error("❌ API Error:", {
-      url: error.config?.url,
-      method: error.config?.method,
-      status: error.response?.status,
-      data: error.response?.data,
-      message: error.message,
-    });
-
     if (error?.response) {
       const statusCode = error?.response?.status;
       if (statusCode >= 400) {
@@ -45,7 +34,6 @@ httpService.interceptors.response.use(
         errorHandler[statusCode](errorData);
       }
     } else {
-      console.error("🔴 Network Error:", error.message);
       networkErrorStrategy();
     }
 

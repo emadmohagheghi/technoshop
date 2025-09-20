@@ -222,7 +222,7 @@ function StepOTP({ username, setStep, router, updateSession }: StepsProps) {
         if (response.success) {
           await updateSession();
 
-          toast.success("ورود موفق - تنها از Cookie authentication استفاده می‌شود");
+          toast.success("ورود موفق");
           router.push("/");
         } else {
           setOtp("");

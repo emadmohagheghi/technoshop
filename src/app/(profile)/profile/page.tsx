@@ -7,5 +7,9 @@ export default function ProfilePage() {
 
   console.log(user);
 
-  return <div className="h-[calc(100vh-62px)] lg:h-[calc(100vh-175px)] grid place-items-center">Profile Page</div>;
+  return (
+    <div className="grid min-h-[calc(100vh-62px)] place-items-center lg:min-h-[calc(100vh-175px)]">
+      <p dir="ltr" className="text-2xl font-medium">Under construction...</p>
+    </div>
+  );
 }
