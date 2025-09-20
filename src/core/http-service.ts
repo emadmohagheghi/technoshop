@@ -1,22 +1,41 @@
 import { ApiError } from "@/types/http-errors.types";
-import axios, { AxiosRequestConfig, AxiosRequestHeaders } from "axios";
+import axios, {
+  AxiosRequestConfig,
+  AxiosRequestHeaders,
+  InternalAxiosRequestConfig,
+} from "axios";
 import { ApiResponseType } from "@/types/response";
 
 import { errorHandler, networkErrorStrategy } from "./http-error-strategies";
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
+type CustomAxiosRequestConfig = InternalAxiosRequestConfig & {
+  skipAuth?: boolean;
+};
+
+const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8000";
+
+console.log("🔗 API_URL:", API_URL);
 
 const httpService = axios.create({
   baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },
-  withCredentials: true,
+  withCredentials: true, // مهم: برای ارسال و دریافت cookies
 });
+
+// Cookie-based authentication - no JWT handling needed
 
 // Request interceptor - فقط Cookie authentication
 httpService.interceptors.request.use(
-  async (config) => {
+  async (config: CustomAxiosRequestConfig) => {
+    if (config.skipAuth) {
+      return config;
+    }
+
+    // فقط Cookie authentication - هیچ JWT handling نیست
+    config.withCredentials = true;
+
     return config;
   },
   (error) => Promise.reject(error),
@@ -24,69 +43,58 @@ httpService.interceptors.request.use(
 
 httpService.interceptors.response.use(
   (response) => {
+    console.log("✅ API Response:", response.config.url, response.status);
     return response;
   },
-
   (error) => {
+    console.error("❌ API Error:", {
+      url: error.config?.url,
+      method: error.config?.method,
+      status: error.response?.status,
+      data: error.response?.data,
+      message: error.message
+    });
+
     if (error?.response) {
       const statusCode = error?.response?.status;
-
-      // برای 401 (غیر مجاز) - وضعیت عادی است، خطا نیاندازیم
-      if (statusCode === 401) {
-        // یک response موفق شبیه‌سازی کنیم با اطلاعات عدم احراز هویت
-        return {
-          data: {
-            success: false,
-            message: "User not authenticated",
-            status: 401,
-            data: null,
-          },
-        };
-      }
-
       if (statusCode >= 400) {
         const errorData: ApiError = error.response?.data;
-
-        // بررسی وجود handler برای status code
-        const handler = errorHandler[statusCode];
-        if (handler) {
-          try {
-            handler(errorData);
-          } catch (handlerError) {
-            // اگر handler خطا داد، error اصلی را برگردان
-            return Promise.reject(error);
-          }
-        } else {
-          // fallback برای status code های تعریف نشده
-          console.warn(`No handler defined for status code: ${statusCode}`);
-        }
+        errorHandler[statusCode](errorData);
       }
     } else {
+      console.error("🔴 Network Error:", error.message);
       networkErrorStrategy();
     }
+
     return Promise.reject(error);
   },
 );
 
 async function apiBase<T>(
   url: string,
-  options?: AxiosRequestConfig,
+  options?: AxiosRequestConfig & { requireAuth?: boolean },
 ): Promise<ApiResponseType<T>> {
   const config = {
     ...options,
+    requireAuth: options?.requireAuth ?? false,
   };
+  if (!config.requireAuth) {
+    (config as any).skipAuth = true;
+  }
   const response = await httpService(url, config);
   return response.data as ApiResponseType<T>;
 }
 
 async function readData<T>(
   url: string,
+  requireAuth?: boolean,
   headers?: AxiosRequestHeaders,
 ): Promise<ApiResponseType<T>> {
   const options: AxiosRequestConfig = {
     headers: headers,
     method: "GET",
   };
+  (options as any).requireAuth = requireAuth;
   return await apiBase<T>(url, options);
 }
 
@@ -94,12 +102,15 @@ async function createData<TModel, TResult>(
   url: string,
   data: TModel,
   headers?: AxiosRequestHeaders,
+  requireAuth?: boolean,
 ): Promise<ApiResponseType<TResult>> {
   const options: AxiosRequestConfig = {
     method: "POST",
     headers: headers,
     data: JSON.stringify(data),
   };
+  (options as any).requireAuth = requireAuth;
+
   return await apiBase<TResult>(url, options);
 }
 
@@ -107,12 +118,14 @@ async function updateData<TModel, TResult>(
   url: string,
   data: TModel,
   headers?: AxiosRequestHeaders,
+  requireAuth?: boolean,
 ): Promise<ApiResponseType<TResult>> {
   const options: AxiosRequestConfig = {
     method: "PUT",
     headers: headers,
     data: JSON.stringify(data),
   };
+  (options as any).requireAuth = requireAuth;
 
   return await apiBase<TResult>(url, options);
 }
@@ -120,21 +133,26 @@ async function updateData<TModel, TResult>(
 async function deleteData(
   url: string,
   headers?: AxiosRequestHeaders,
+  requireAuth?: boolean,
 ): Promise<ApiResponseType<void>> {
   const options: AxiosRequestConfig = {
     method: "DELETE",
     headers: headers,
   };
+  (options as any).requireAuth = requireAuth;
 
   return await apiBase(url, options);
 }
 
+// Logout function - فقط Cookie authentication
 async function logoutUser(): Promise<void> {
   try {
+    // فقط logout endpoint را صدا می‌زنیم، backend خودش cookie را حذف می‌کند
     await httpService.post("/api/auth/admin/logout/");
   } catch (error) {
     console.warn("Logout request failed:", error);
   }
+  // دیگر نیازی به localStorage نیست
 }
 
 export { createData, readData, updateData, deleteData, logoutUser };

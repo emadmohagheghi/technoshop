@@ -33,7 +33,7 @@ export function useAuth() {
         authentication_method: string;
         is_authenticated: boolean;
         is_superuser: boolean;
-      }>("api/users/request/current/");
+      }>("/api/users/test-auth/", true);
 
       if (response.success && response.data.is_authenticated) {
         setAuthState({

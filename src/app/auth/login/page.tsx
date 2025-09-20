@@ -152,8 +152,7 @@ function StepCheck({ username, setUsername, setStep }: StepsProps) {
     </>
   );
 }
-
-function StepPassword({ username, router, updateSession }: StepsProps) {
+function StepPassword({ username, setStep, router, updateSession }: StepsProps) {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -164,18 +163,19 @@ function StepPassword({ username, router, updateSession }: StepsProps) {
       const response = await createData<
         { username: string; password: string },
         { access: string; refresh: string }
-      >("/api/users/authenticate/password/", { username, password });
+      >("/api/users/authenticate/password/", { username, password }, undefined, false);
 
       if (response.success) {
         // بروزرسانی store - فقط Cookie authentication
         await updateSession();
 
-        toast.success("ورود موفق");
+        toast.success("ورود موفق - تنها از Cookie authentication استفاده می‌شود");
         router.push("/");
       } else {
         toast.error("رمز عبور اشتباه است");
       }
-    } catch {
+    } catch (error) {
+      console.error("Password error:", error);
       toast.error("خطایی رخ داد. لطفا دوباره تلاش کنید");
     } finally {
       setIsLoading(false);
@@ -218,22 +218,20 @@ function StepOTP({ username, setStep, router, updateSession }: StepsProps) {
         const response = await createData<
           { username: string; otp: string },
           { access: string; refresh: string }
-        >(
-          "/api/users/authenticate/otp/",
-          { username, otp: value },
-
-        );
+        >("/api/users/authenticate/otp/", { username, otp: value }, undefined, false);
 
         if (response.success) {
+          // بروزرسانی store - فقط Cookie authentication
           await updateSession();
 
-          toast.success("ورود موفق");
+          toast.success("ورود موفق - تنها از Cookie authentication استفاده می‌شود");
           router.push("/");
         } else {
           setOtp("");
           toast.error("کد تایید اشتباه است");
         }
-      } catch {
+      } catch (error) {
+        console.error("OTP error:", error);
         setOtp("");
         toast.error("خطایی رخ داد. لطفا دوباره تلاش کنید");
       } finally {
