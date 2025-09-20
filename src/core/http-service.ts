@@ -2,18 +2,12 @@ import { ApiError } from "@/types/http-errors.types";
 import axios, {
   AxiosRequestConfig,
   AxiosRequestHeaders,
-  InternalAxiosRequestConfig,
 } from "axios";
 import { ApiResponseType } from "@/types/response";
 
 import { errorHandler, networkErrorStrategy } from "./http-error-strategies";
 
-type CustomAxiosRequestConfig = InternalAxiosRequestConfig & {
-  skipAuth?: boolean;
-};
-
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8000";
-
+const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const httpService = axios.create({
   baseURL: API_URL,
@@ -24,13 +18,8 @@ const httpService = axios.create({
 });
 
 httpService.interceptors.request.use(
-  async (config: CustomAxiosRequestConfig) => {
-    if (config.skipAuth) {
-      return config;
-    }
-
+  async (config) => {
     config.withCredentials = true;
-
     return config;
   },
   (error) => Promise.reject(error),
@@ -46,7 +35,7 @@ httpService.interceptors.response.use(
       method: error.config?.method,
       status: error.response?.status,
       data: error.response?.data,
-      message: error.message
+      message: error.message,
     });
 
     if (error?.response) {
@@ -66,29 +55,20 @@ httpService.interceptors.response.use(
 
 async function apiBase<T>(
   url: string,
-  options?: AxiosRequestConfig & { requireAuth?: boolean },
+  options?: AxiosRequestConfig,
 ): Promise<ApiResponseType<T>> {
-  const config = {
-    ...options,
-    requireAuth: options?.requireAuth ?? false,
-  };
-  if (!config.requireAuth) {
-    (config as any).skipAuth = true;
-  }
-  const response = await httpService(url, config);
+  const response = await httpService(url, options);
   return response.data as ApiResponseType<T>;
 }
 
 async function readData<T>(
   url: string,
-  requireAuth?: boolean,
   headers?: AxiosRequestHeaders,
 ): Promise<ApiResponseType<T>> {
   const options: AxiosRequestConfig = {
     headers: headers,
     method: "GET",
   };
-  (options as any).requireAuth = requireAuth;
   return await apiBase<T>(url, options);
 }
 
@@ -96,14 +76,12 @@ async function createData<TModel, TResult>(
   url: string,
   data: TModel,
   headers?: AxiosRequestHeaders,
-  requireAuth?: boolean,
 ): Promise<ApiResponseType<TResult>> {
   const options: AxiosRequestConfig = {
     method: "POST",
     headers: headers,
     data: JSON.stringify(data),
   };
-  (options as any).requireAuth = requireAuth;
 
   return await apiBase<TResult>(url, options);
 }
@@ -112,14 +90,12 @@ async function updateData<TModel, TResult>(
   url: string,
   data: TModel,
   headers?: AxiosRequestHeaders,
-  requireAuth?: boolean,
 ): Promise<ApiResponseType<TResult>> {
   const options: AxiosRequestConfig = {
     method: "PUT",
     headers: headers,
     data: JSON.stringify(data),
   };
-  (options as any).requireAuth = requireAuth;
 
   return await apiBase<TResult>(url, options);
 }
@@ -127,13 +103,11 @@ async function updateData<TModel, TResult>(
 async function deleteData(
   url: string,
   headers?: AxiosRequestHeaders,
-  requireAuth?: boolean,
 ): Promise<ApiResponseType<void>> {
   const options: AxiosRequestConfig = {
     method: "DELETE",
     headers: headers,
   };
-  (options as any).requireAuth = requireAuth;
 
   return await apiBase(url, options);
 }

@@ -163,10 +163,9 @@ function StepPassword({ username, setStep, router, updateSession }: StepsProps) 
       const response = await createData<
         { username: string; password: string },
         { access: string; refresh: string }
-      >("/api/users/authenticate/password/", { username, password }, undefined, false);
+      >("/api/users/authenticate/password/", { username, password });
 
       if (response.success) {
-        // بروزرسانی store - فقط Cookie authentication
         await updateSession();
 
         toast.success("ورود موفق - تنها از Cookie authentication استفاده می‌شود");
@@ -218,10 +217,9 @@ function StepOTP({ username, setStep, router, updateSession }: StepsProps) {
         const response = await createData<
           { username: string; otp: string },
           { access: string; refresh: string }
-        >("/api/users/authenticate/otp/", { username, otp: value }, undefined, false);
+        >("/api/users/authenticate/otp/", { username, otp: value });
 
         if (response.success) {
-          // بروزرسانی store - فقط Cookie authentication
           await updateSession();
 
           toast.success("ورود موفق - تنها از Cookie authentication استفاده می‌شود");

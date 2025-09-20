@@ -5,7 +5,6 @@ import { cn } from "@/lib/utils";
 import { SearchNormal1 } from "iconsax-reactjs";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUserStore } from "@/stores/user.store";
 
 const mostSearched = [
   "مک بوک پرو",
@@ -37,8 +36,6 @@ export default function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
   const [value, setValue] = useState("");
   const router = useRouter();
-  const search_histories = useUserStore(state => state.user?.search_histories)
-
 
   const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!value) return;

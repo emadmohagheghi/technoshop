@@ -1,6 +1,6 @@
 import Footer from "@/app/_components/footer";
 
-export default function({
+export default function UserLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
