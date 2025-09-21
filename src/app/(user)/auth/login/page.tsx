@@ -152,7 +152,7 @@ function StepCheck({ username, setUsername, setStep }: StepsProps) {
     </>
   );
 }
-function StepPassword({ username, setStep, router, updateSession }: StepsProps) {
+function StepPassword({ username, router, updateSession }: StepsProps) {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -168,7 +168,7 @@ function StepPassword({ username, setStep, router, updateSession }: StepsProps) 
       if (response.success) {
         await updateSession();
 
-        toast.success("ورود موفق - تنها از Cookie authentication استفاده می‌شود");
+        toast.success("ورود موفق");
         router.push("/");
       } else {
         toast.error("رمز عبور اشتباه است");
@@ -205,7 +205,7 @@ function StepPassword({ username, setStep, router, updateSession }: StepsProps) 
     </>
   );
 }
-function StepOTP({ username, setStep, router, updateSession }: StepsProps) {
+function StepOTP({ username, router, updateSession }: StepsProps) {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 

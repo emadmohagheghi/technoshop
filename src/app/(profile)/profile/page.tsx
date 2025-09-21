@@ -1,9 +1,9 @@
 "use client";
 
-import { useAuth } from "@/stores/user.store";
+import { useUserStore } from "@/stores/user.store";
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user } = useUserStore();
 
   console.log(user);
 

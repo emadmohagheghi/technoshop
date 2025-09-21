@@ -1,19 +1,6 @@
 import { create } from "zustand";
 import { readData, logoutUser } from "@/core/http-service";
-
-interface UserInfo {
-  id: number;
-  username: string;
-  email?: string;
-  phone?: string;
-  first_name?: string;
-  last_name?: string;
-  full_name?: string;
-  is_superuser: boolean;
-  is_active?: boolean;
-  date_joined?: string;
-  last_login?: string;
-}
+import { UserInfo } from "@/types/user.types";
 
 type AuthStatus = "authenticated" | "unauthenticated" | "loading";
 
@@ -27,21 +14,10 @@ interface SessionState {
 
 const fetchCurrentUser = async () => {
   try {
-    const response = await readData<{
-      message: string;
-      user_id: number;
-      username: string;
-      is_authenticated: boolean;
-      is_superuser: boolean;
-    }>("/api/users/test-auth/");
+    const response = await readData<UserInfo>("/api/users/request/current/");
 
-    if (response.success && response.data.is_authenticated) {
-      const data = response.data;
-      const user: UserInfo = {
-        id: data.user_id,
-        username: data.username,
-        is_superuser: data.is_superuser,
-      };
+    if (response.success) {
+      const user = response.data;
 
       return {
         user,
