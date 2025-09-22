@@ -1,11 +1,16 @@
 "use client";
 import { TabsContent } from "@/app/_components/ui/tabs";
 import { useParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 export default function ProfilePage() {
   const params = useParams();
   const currentTab = (params?.slug as string) || "account";
+
+  if (!["account", "orders", "settings"].includes(currentTab)) {
+    notFound();
+  }
 
   return (
     <>
@@ -14,7 +19,7 @@ export default function ProfilePage() {
         value="account"
         className={cn(
           { hidden: currentTab !== "account" },
-          "bg-error flex items-center justify-center",
+          "flex items-center justify-center",
         )}
       >
         <p>Account settings go here.</p>
@@ -24,7 +29,7 @@ export default function ProfilePage() {
         value="orders"
         className={cn(
           { hidden: currentTab !== "orders" },
-          "bg-error flex items-center justify-center",
+          "flex items-center justify-center",
         )}
       >
         <p>Under construction...</p>
@@ -34,7 +39,7 @@ export default function ProfilePage() {
         value="settings"
         className={cn(
           { hidden: currentTab !== "settings" },
-          "bg-error flex items-center justify-center",
+          "flex items-center justify-center",
         )}
       >
         <p>Under construction...</p>

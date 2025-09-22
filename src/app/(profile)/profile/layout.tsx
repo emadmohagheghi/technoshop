@@ -3,6 +3,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/app/_components/ui/tabs";
 import { User, UserEdit, Bag , Setting} from "iconsax-reactjs";
 import { useUserStore } from "@/stores/user.store";
 import Link from "next/link";
+import { useParams } from "next/navigation";
 import { Suspense } from "react";
 
 export default function ProfileLayout({
@@ -11,11 +12,12 @@ export default function ProfileLayout({
   children: React.ReactNode;
 }) {
   const { user } = useUserStore();
+  const params = useParams();
 
   return (
     <div>
-      <div className="container pt-5">
-        <Tabs dir="rtl" className="flex-row" defaultValue="account">
+      <div className="container py-5">
+        <Tabs dir="rtl" className="flex-row min-h-[calc(100vh-215px)]" defaultValue={params?.slug as string}>
           <TabsList
             className="flex w-72 flex-col *:h-fit *:w-full *:justify-start *:py-5.5 *:!text-xl *:!font-medium"
             containerColor="bg-white"

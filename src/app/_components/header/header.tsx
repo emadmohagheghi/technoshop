@@ -38,7 +38,7 @@ export default function Header() {
                     </Button>
                   </>
                 ) : user ? (
-                  <Link href="/profile">
+                  <Link href="/profile/account">
                     <Button
                       size="lg"
                       className="bg-brand-primary hover:bg-brand-primary-focus cursor-pointer text-base"
