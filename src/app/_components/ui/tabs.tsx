@@ -20,11 +20,19 @@ function Tabs({
   );
 }
 
+interface TabsListProps
+  extends React.ComponentProps<typeof TabsPrimitive.List> {
+  containerColor?: string;
+  indicatorColor?: string;
+}
+
 function TabsList({
   className,
   children,
+  containerColor = "bg-gray-100",
+  indicatorColor = "bg-brand-primary",
   ...props
-}: React.ComponentProps<typeof TabsPrimitive.List>) {
+}: TabsListProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<(HTMLButtonElement | null)[]>([]);
@@ -44,10 +52,13 @@ function TabsList({
         const btnRect = activeButton.getBoundingClientRect();
         const containerRect = container.getBoundingClientRect();
         const offsetLeft = btnRect.left - containerRect.left;
+        const offsetTop = btnRect.top - containerRect.top;
         const width = btnRect.width;
+        const height = btnRect.height;
 
-        bg.style.transform = `translateX(${offsetLeft}px)`;
+        bg.style.transform = `translate(${offsetLeft}px, ${offsetTop}px)`;
         bg.style.width = `${width}px`;
+        bg.style.height = `${height}px`;
       }
     };
 
@@ -69,15 +80,19 @@ function TabsList({
       ref={containerRef}
       data-slot="tabs-list"
       className={cn(
-        "relative inline-flex w-full items-center justify-start gap-1.5 rounded-lg bg-gray-100 p-2 text-black",
+        "relative inline-flex w-full items-center justify-start gap-1.5 rounded-lg p-2 text-black",
+        containerColor,
         className,
       )}
       {...props}
     >
       <div
         ref={activeRef}
-        className="bg-brand-primary absolute bottom-0 left-0 h-1 rounded-t-lg transition-all duration-300 ease-in-out"
-        style={{ width: 0 }}
+        className={cn(
+          "absolute top-0 left-0 rounded-lg transition-all duration-300 ease-in-out",
+          indicatorColor,
+        )}
+        style={{ width: 0, height: 0 }}
       />
       {React.Children.map(children, (child, index) => {
         const childElement = child as React.ReactElement<
