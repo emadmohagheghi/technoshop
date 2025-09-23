@@ -3,6 +3,7 @@ import { TabsContent } from "@/app/_components/ui/tabs";
 import { useParams } from "next/navigation";
 import { notFound } from "next/navigation";
 import { cn } from "@/lib/utils";
+import UserInformations from "../_components/user-informations";
 
 export default function ProfilePage() {
   const params = useParams();
@@ -15,21 +16,20 @@ export default function ProfilePage() {
   return (
     <>
       <TabsContent
-        dir="ltr"
         value="account"
         className={cn(
           { hidden: currentTab !== "account" },
-          "flex items-center justify-center",
+          "bg-white rounded-lg p-5",
         )}
       >
-        <p>Account settings go here.</p>
+        <UserInformations />
       </TabsContent>
       <TabsContent
         dir="ltr"
         value="orders"
         className={cn(
           { hidden: currentTab !== "orders" },
-          "flex items-center justify-center",
+          "bg-white rounded-lg p-5",
         )}
       >
         <p>Under construction...</p>
@@ -39,7 +39,7 @@ export default function ProfilePage() {
         value="settings"
         className={cn(
           { hidden: currentTab !== "settings" },
-          "flex items-center justify-center",
+          "bg-white rounded-lg p-5",
         )}
       >
         <p>Under construction...</p>
