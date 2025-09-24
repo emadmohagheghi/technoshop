@@ -1,6 +1,12 @@
 import { create } from "zustand";
 import { readData, logoutUser } from "@/core/http-service";
 import { UserInfo } from "@/types/user.types";
+import {
+  updateUserDetails,
+  UpdateUserDetailsRequest,
+  updateNationalCode,
+  UpdateNationalCodeRequest,
+} from "@/services/users-service";
 
 type AuthStatus = "authenticated" | "unauthenticated" | "loading";
 
@@ -10,6 +16,12 @@ interface SessionState {
   clearSession: () => void;
   updateSession: () => Promise<void>;
   logout: () => Promise<void>;
+  updateUserInfo: (
+    data: UpdateUserDetailsRequest,
+  ) => Promise<{ success: boolean; message?: string }>;
+  updateNationalCode: (
+    data: UpdateNationalCodeRequest,
+  ) => Promise<{ success: boolean; message?: string }>;
 }
 
 const fetchCurrentUser = async () => {
@@ -74,6 +86,59 @@ export const useUserStore = create<SessionState>((set, get) => ({
         user: null,
         status: "unauthenticated" as AuthStatus,
       });
+    }
+  },
+
+  updateUserInfo: async (data: UpdateUserDetailsRequest) => {
+    try {
+      const response = await updateUserDetails(data);
+
+      if (response.success) {
+        // Update the local user state with new data
+        const currentUser = get().user;
+        if (currentUser) {
+          set({
+            user: {
+              ...currentUser,
+              first_name: data.first_name,
+              last_name: data.last_name,
+              full_name: `${data.first_name} ${data.last_name}`,
+              national_code: data.national_code || currentUser.national_code,
+            },
+          });
+        }
+        return { success: true };
+      }
+
+      return { success: false, message: response.message };
+    } catch (error) {
+      console.error("Update user info failed:", error);
+      return { success: false, message: "خطا در به‌روزرسانی اطلاعات" };
+    }
+  },
+
+  updateNationalCode: async (data: UpdateNationalCodeRequest) => {
+    try {
+      const response = await updateNationalCode(data);
+
+      if (response.success) {
+        // Update the local user state with new national code
+        const currentUser = get().user;
+        if (currentUser) {
+          set({
+            user: {
+              ...currentUser,
+              national_code: data.national_code || null,
+            },
+          });
+        }
+        return { success: true };
+      }
+
+      return { success: false, message: response.message };
+    } catch (error) {
+      console.error("Update national code failed:", error);
+      return { success: false, message: "خطا در به‌روزرسانی کد ملی" };
     }
   },
 }));

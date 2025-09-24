@@ -19,7 +19,7 @@ export default function ProfilePage() {
         value="account"
         className={cn(
           { hidden: currentTab !== "account" },
-          "bg-white rounded-lg p-5",
+          "bg-white rounded-lg p-5 sm:p-10",
         )}
       >
         <UserInformations />
@@ -29,7 +29,7 @@ export default function ProfilePage() {
         value="orders"
         className={cn(
           { hidden: currentTab !== "orders" },
-          "bg-white rounded-lg p-5",
+          "bg-white rounded-lg p-5 sm:p-10",
         )}
       >
         <p>Under construction...</p>
@@ -39,7 +39,7 @@ export default function ProfilePage() {
         value="settings"
         className={cn(
           { hidden: currentTab !== "settings" },
-          "bg-white rounded-lg p-5",
+          "bg-white rounded-lg p-5 sm:p-10",
         )}
       >
         <p>Under construction...</p>

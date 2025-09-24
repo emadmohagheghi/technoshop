@@ -9,17 +9,25 @@ import { Suspense } from "react";
 const TriggerList = [
   {
     value: "account",
-    icon: <UserEdit className="size-6 hidden lg:block" />,
+    icon: <UserEdit className="hidden size-6 lg:block" />,
     label: "اطلاعات فردی",
   },
-  { value: "orders", icon: <Bag className="size-6 hidden lg:block" />, label: "سفارشات" },
-  { value: "settings", icon: <Setting className="size-6 hidden lg:block" />, label: "تنظیمات" },
+  {
+    value: "orders",
+    icon: <Bag className="hidden size-6 lg:block" />,
+    label: "سفارشات",
+  },
+  {
+    value: "settings",
+    icon: <Setting className="hidden size-6 lg:block" />,
+    label: "تنظیمات",
+  },
 ];
 
 function TabsListContent() {
   const { user } = useUserStore();
   return (
-    <div className="w-full lg:w-72">
+    <div className="w-full lg:w-92">
       <TabsList
         className="flex w-full flex-row flex-wrap *:h-fit *:justify-start *:py-5.5 *:!text-xl *:!font-medium lg:flex-col"
         containerColor="bg-white"
@@ -48,7 +56,7 @@ function TabsListContent() {
           >
             <Link href={`/profile/${trigger.value}`}>
               {trigger.icon}
-              <p className="text-base">{trigger.label}</p>
+              <p className="text-base lg:text-lg">{trigger.label}</p>
             </Link>
           </TabsTrigger>
         ))}
@@ -73,7 +81,9 @@ export default function ProfileLayout({
         >
           <TabsListContent />
 
-          <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+          <div className="bg-white w-full rounded-lg">
+            <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+          </div>
         </Tabs>
       </div>
     </div>

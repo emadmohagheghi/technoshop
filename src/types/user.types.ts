@@ -64,3 +64,9 @@ export const address = v.pipe(
   v.maxLength(100, "آدرس نمی‌تواند بیش از 100 کاراکتر باشد"),
   v.trim(),
 );
+
+export const national_code = v.pipe(
+  v.string(),
+  v.regex(/^\d{10}$/, "کد ملی باید 10 رقم باشد"),
+  v.trim(),
+);
