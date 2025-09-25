@@ -25,7 +25,9 @@ import { UserUpdateSchema, type UserUpdateFormData } from "./_types";
 import { cn } from "@/lib/utils";
 
 export default function EditName() {
-  const { updateUserInfo, user } = useUserStore();
+  const updateUserInfo = useUserStore((state) => state.updateUserInfo);
+  const user = useUserStore((state) => state.user);
+  const status = useUserStore((state) => state.status);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -83,11 +85,11 @@ export default function EditName() {
       <div className="flex-1">
         <p className="mb-1 text-sm text-gray-600">نام و نام خانوادگی</p>
         <p
-          className={cn("text-xl font-medium", {
-            "h-7 w-40 animate-pulse rounded-full bg-gray-300": !user?.full_name,
+          className={cn("text-lg font-medium", {
+            "h-7 w-40 animate-pulse rounded-full bg-gray-300": status === "loading",
           })}
         >
-          {user?.full_name || ""}
+          {!(status === "loading") && (user?.full_name || "نامشخص")}
         </p>
       </div>
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>

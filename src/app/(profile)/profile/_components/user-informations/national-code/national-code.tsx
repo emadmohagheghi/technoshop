@@ -28,7 +28,9 @@ import {
 } from "../national-code/_types";
 
 export function NationalCode() {
-  const { updateNationalCode, user } = useUserStore();
+  const updateNationalCode = useUserStore((state) => state.updateNationalCode);
+  const user = useUserStore((state) => state.user);
+  const status = useUserStore((state) => state.status);
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -95,10 +97,10 @@ export function NationalCode() {
         <p
           className={cn("text-xl font-medium", {
             "h-7 w-32 animate-pulse rounded-full bg-gray-300":
-              !user?.national_code,
+              status === "loading",
           })}
         >
-          {user?.national_code || ""}
+          {!(status === "loading") && (user?.national_code || "نامشخص")}
         </p>
       </div>
 
