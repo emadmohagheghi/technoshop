@@ -1,5 +1,5 @@
 export function imageUrl(name: string): string {
-  return `http://localhost:8000/media/${name}`;
+  return `https://ehmhqxzbdyspniaklgld.supabase.co/storage/v1/object/public/technoshop/media/${name}`;
 }
 
 export function calculateDiscountPercentage(
