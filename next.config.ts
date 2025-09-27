@@ -8,6 +8,10 @@ const nextConfig: NextConfig = {
         hostname: "localhost",
         port: "8000",
       },
+      {
+        protocol: "https",
+        hostname: "ehmhqxzbdyspniaklgld.supabase.co",
+      }
     ],
   },
 };
