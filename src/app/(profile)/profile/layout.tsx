@@ -3,8 +3,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/app/_components/ui/tabs";
 import { User, UserEdit, Bag, Setting } from "iconsax-reactjs";
 import { useUserStore } from "@/stores/user.store";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { Suspense } from "react";
+import { useParams, useRouter, usePathname } from "next/navigation";
+import { useTransition } from "react";
+import SpinnerLoading from "@/app/_components/ui/spinner-loading";
 
 const TriggerList = [
   {
@@ -24,8 +25,23 @@ const TriggerList = [
   },
 ];
 
-function TabsListContent() {
+function TabsListContent({
+  startTransition,
+}: {
+  startTransition: (callback: () => void) => void;
+}) {
   const { user } = useUserStore();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleTabClick = (href: string) => {
+    if (pathname !== href) {
+      startTransition(() => {
+        router.push(href);
+      });
+    }
+  };
+
   return (
     <div className="w-full lg:w-92">
       <TabsList
@@ -54,7 +70,10 @@ function TabsListContent() {
             asChild
             className="lg:w-full lg:flex-1"
           >
-            <Link href={`/profile/${trigger.value}`}>
+            <Link
+              onClick={() => handleTabClick(`/profile/${trigger.value}`)}
+              href={`/profile/${trigger.value}`}
+            >
               {trigger.icon}
               <p className="text-base lg:text-lg">{trigger.label}</p>
             </Link>
@@ -71,18 +90,25 @@ export default function ProfileLayout({
   children: React.ReactNode;
 }) {
   const params = useParams();
+  const [isPending, startTransition] = useTransition();
   return (
     <div>
-      <div className="container py-5">
+      <div className="container px-3 py-5">
         <Tabs
           dir="rtl"
           className="min-h-[calc(100vh-215px)] lg:flex-row"
           defaultValue={params?.slug as string}
         >
-          <TabsListContent />
+          <TabsListContent startTransition={startTransition} />
 
-          <div className="bg-white w-full rounded-lg">
-            <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
+          <div className="w-full rounded-lg bg-white min-h-[calc(100vh-401px)]">
+            {isPending ? (
+              <div className="flex min-h-[calc(100vh-401px)] lg:h-full w-full items-center justify-center rounded-lg bg-white">
+                <SpinnerLoading className="size-10" />
+              </div>
+            ) : (
+              children
+            )}
           </div>
         </Tabs>
       </div>
