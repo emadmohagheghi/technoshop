@@ -4,6 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 export function useBanner() {
   return useQuery({
     queryKey: ["banner"],
-    queryFn: getBanners
+    queryFn: getBanners,
   });
 }
