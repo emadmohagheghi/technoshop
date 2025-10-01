@@ -80,14 +80,17 @@ export default function ProductTabs() {
   };
 
   return (
-    <div>
+    <div className="mt-5">
       <Tabs
         dir="rtl"
         value={activeTab}
         onValueChange={handleTabChange}
         className="overflow-hidden"
       >
-        <TabsList>
+        <TabsList
+          indicatorColor="bg-brand-primary-content"
+          className="*:p-3"
+        >
           <TabsTrigger value="tab1">مشخصات فنی</TabsTrigger>
           <TabsTrigger value="tab2">نقد و بررسی</TabsTrigger>
           <TabsTrigger value="tab3">نظرات کاربران</TabsTrigger>

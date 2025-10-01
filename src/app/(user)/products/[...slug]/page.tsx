@@ -4,7 +4,7 @@ import ImageSlider from "./_components/image-slider";
 import ProductInfo from "./_components/product-info";
 import Features from "./_components/features";
 import ProductTabs from "./_components/product-tabs/product-tabs";
-
+import { getProductByShortSlug } from "@/services/products-service";
 
 export default async function ProductPage({
   params,
@@ -14,10 +14,7 @@ export default async function ProductPage({
   const resolvedParams = await params;
   const productSlug = resolvedParams.slug[0];
 
-  const product = await readData<ProductDetail>(
-    `http://localhost:8000/api/catalog/product/${productSlug}/`,
-  ).then((response) => response.data);
-
+  const product = await getProductByShortSlug(Number(productSlug));
 
   return (
     <div>

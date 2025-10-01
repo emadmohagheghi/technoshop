@@ -32,7 +32,7 @@ export async function getBestSellingProducts() {
 
 export async function getProductByShortSlug(short_slug: number) {
   const res = await readData<ProductDetail>(
-    `http://localhost:8000/api/catalog/product/${short_slug}/`,
+    `/api/catalog/product/${short_slug}/`,
   );
   return res.data;
 }

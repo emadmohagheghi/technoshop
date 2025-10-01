@@ -32,11 +32,9 @@ export default function Comments() {
 
   async function getComments() {
     return await readData<ApiFilterResultType<comment>>(
-      "http://localhost:8000/api/catalog/product/comment/list/33/",
+      "/api/catalog/product/comment/list/5/",
     ).then((res) => res.data.data);
   }
-
-  console.log(comments);
 
   return (
     <>
@@ -54,7 +52,7 @@ export default function Comments() {
             <div className="cursor-pointer">{SORT_OPTIONS[2]}</div>
             <div className="cursor-pointer">{SORT_OPTIONS[3]}</div>
           </div>
-          <Button>نظر خود را ثبت کنید</Button>
+          <Button className="bg-brand-primary hover:bg-brand-primary-focus">نظر خود را ثبت کنید</Button>
         </div>
         {/* laptop view */}
         <div className="hidden flex-col gap-5 divide-y divide-gray-300 px-10 lg:flex">
