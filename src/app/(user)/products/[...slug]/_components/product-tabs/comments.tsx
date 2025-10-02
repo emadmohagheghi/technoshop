@@ -1,11 +1,9 @@
 "use client";
 import { Button } from "@/app/_components/ui/button";
 import { Layer, Like1, Dislike } from "iconsax-reactjs";
-import { readData } from "@/core/http-service";
-import type { ApiFilterResultType } from "@/types/response";
 import { Rating } from "@/app/_components/ui/rating";
 import Carousel from "@/app/_components/ui/carousel";
-import { useQuery } from "@tanstack/react-query";
+import type { CommentsProps } from "./types";
 
 const SORT_OPTIONS = [
   "جدیدترین",
@@ -14,28 +12,7 @@ const SORT_OPTIONS = [
   "کمترین امتیاز",
 ] as const;
 
-type comment = {
-  comment: string;
-  created_at: Date;
-  id: number;
-  is_buyer: boolean;
-  suggestion: "پیشنهاد میکنم" | "پیشنهاد نمیکنم";
-  title: string;
-  user: number;
-};
-
-export default function Comments() {
-  const { data: comments } = useQuery({
-    queryKey: ["comments"],
-    queryFn: getComments,
-  });
-
-  async function getComments() {
-    return await readData<ApiFilterResultType<comment>>(
-      "/api/catalog/product/comment/list/5/",
-    ).then((res) => res.data.data);
-  }
-
+export default function Comments({ comments }: CommentsProps) {
   return (
     <>
       <div className="my-5 flex flex-col gap-5 lg:px-10">
@@ -52,7 +29,9 @@ export default function Comments() {
             <div className="cursor-pointer">{SORT_OPTIONS[2]}</div>
             <div className="cursor-pointer">{SORT_OPTIONS[3]}</div>
           </div>
-          <Button className="bg-brand-primary hover:bg-brand-primary-focus">نظر خود را ثبت کنید</Button>
+          <Button className="bg-brand-primary hover:bg-brand-primary-focus">
+            نظر خود را ثبت کنید
+          </Button>
         </div>
         {/* laptop view */}
         <div className="hidden flex-col gap-5 divide-y divide-gray-300 px-10 lg:flex">
