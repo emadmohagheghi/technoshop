@@ -4,6 +4,8 @@ import "./globals.css";
 import { Toaster } from "@/app/_components/ui/sonner";
 import Header from "@/app/_components/header/header";
 import QueryProvider from "@/providers/react-query-provider";
+import NextTopLoader from 'nextjs-toploader';
+
 
 const iranyekan = localFont({
   src: [
@@ -82,6 +84,7 @@ export default function RootLayout({
   return (
     <html lang="fa" dir="rtl">
       <body className={`${iranyekan.variable} antialiased`}>
+        <NextTopLoader showSpinner={false} color="var(--color-primary)" />
         <QueryProvider>
           <Header />
           <main className="pt-[62px] lg:pt-[175px]">{children}</main>
