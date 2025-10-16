@@ -205,8 +205,7 @@ export default function Filters() {
       <Drawer>
         <DrawerTrigger asChild>
           <Button
-            variant="outline"
-            className="bg-brand-primary w-full flex-1 !rounded-full text-white lg:hidden"
+            className="bg-brand-primary w-full flex-1 !rounded-full text-white lg:hidden hover:bg-brand-primary-focus"
           >
             فیلتر ها
           </Button>

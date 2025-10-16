@@ -78,7 +78,7 @@ export function NationalCode() {
       } else {
         toast.error(result.message || "خطا در به‌روزرسانی کد ملی");
       }
-    } catch (error) {
+    } catch {
       toast.error("خطا در به‌روزرسانی کد ملی");
     } finally {
       setIsLoading(false);

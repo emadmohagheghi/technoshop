@@ -64,7 +64,7 @@ export default function ProductTabs() {
       });
     });
 
-    Object.entries(contentRefs.current).forEach(([_, element]) => {
+    Object.entries(contentRefs.current).forEach(([, element]) => {
       if (element) {
         resizeObserverRef.current?.observe(element);
       }

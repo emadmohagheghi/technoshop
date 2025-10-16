@@ -72,7 +72,7 @@ export default function EditName() {
       } else {
         toast.error(result.message || "خطا در به‌روزرسانی اطلاعات");
       }
-    } catch (error) {
+    } catch {
       toast.error("خطا در به‌روزرسانی اطلاعات");
     } finally {
       setIsLoading(false);

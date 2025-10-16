@@ -5,7 +5,6 @@ import { useCartStore } from "@/stores/cart.store";
 import { Badge } from "@/app/_components/ui/badge";
 import { Button } from "@/app/_components/ui/button";
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
@@ -135,28 +134,12 @@ export default function CartBtn() {
   }, []);
 
   const handleViewCart = () => {
-    setPopoverOpen(false); // بستن popover
+    setPopoverOpen(false);
     router.push("/checkout/cart");
   };
 
   return (
     <>
-      {/* برای صفحات کوچک تر از lg */}
-      <Link href="/checkout/cart" className="lg:hidden">
-        <div className="relative cursor-pointer">
-          <ShoppingCart size="32" />
-          {totalItems > 0 && (
-            <Badge
-              variant="destructive"
-              className="absolute -top-2 -right-2 flex size-5 items-center justify-center rounded-full p-0 text-xs"
-            >
-              {totalItems}
-            </Badge>
-          )}
-        </div>
-      </Link>
-
-      {/* برای صفحات lg و بزرگتر */}
       <div className="hidden lg:block">
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
           <PopoverTrigger asChild>

@@ -29,7 +29,7 @@ export default function SortOptions() {
     if (activeIndex === -1) {
       setSort("1");
     }
-  }, [activeIndex]);
+  }, [activeIndex , setSort]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -102,7 +102,7 @@ export default function SortOptions() {
       </div>
       <Drawer>
         <DrawerTrigger asChild>
-          <Button className="w-full flex-1 !rounded-full lg:hidden bg-brand-primary">
+          <Button className="w-full flex-1 !rounded-full lg:hidden bg-brand-primary hover:bg-brand-primary-focus">
             مرتب سازی
           </Button>
         </DrawerTrigger>

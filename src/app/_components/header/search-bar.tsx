@@ -37,30 +37,41 @@ export default function SearchBar() {
   const [value, setValue] = useState("");
   const router = useRouter();
 
-  const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleSearch = (e?: React.KeyboardEvent<HTMLInputElement>) => {
     if (!value) return;
-    if (e.key !== "Enter") return;
+    if (e && e.key !== "Enter") return;
     router.push("/products?q=" + encodeURIComponent(value));
     setValue("");
     setIsFocused(false);
-    e.currentTarget?.blur();
   };
 
   return (
     <>
       <div
         className={cn(
-          "relative z-20 h-12 w-full flex-1 rounded-md bg-white lg:max-w-[600px]",
+          "group relative z-20 h-12 w-full flex-1 rounded-md bg-white lg:max-w-[600px]",
           { "rounded-b-none": isFocused },
         )}
         onFocus={() => setIsFocused(true)}
       >
+        <span
+          className={cn(
+            "absolute top-1/2 right-18 -translate-y-1/2 text-gray-700 group-focus-within:hidden",
+            { "opacity-0": isFocused || value },
+          )}
+        >
+          <span className="lg:hidden">در</span>
+          <span className="text-brand-primary font-bold lg:hidden">
+            تکنوشاپ...
+          </span>
+        </span>
         <Input
           placeholder="جستجو"
           className={cn(
-            "size-full pr-5 placeholder:transition-all focus:placeholder:pr-2 md:text-base",
+            "size-full pr-5 focus:placeholder:opacity-0 md:text-base",
             {
-              "border-brand-primary border-0 border-b-2": isFocused,
+              "border-brand-primary border-0 border-b-2 placeholder:opacity-0":
+                isFocused || value,
             },
           )}
           value={value}
@@ -73,6 +84,7 @@ export default function SearchBar() {
             "absolute top-1/2 left-3 -translate-y-1/2 cursor-pointer text-gray-400 transition-colors",
             { "text-brand-primary": isFocused },
           )}
+          onClick={() => handleSearch()}
         />
 
         {/* Dynamic content shown on focus */}

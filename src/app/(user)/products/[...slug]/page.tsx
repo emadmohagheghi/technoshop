@@ -1,5 +1,3 @@
-import { readData } from "@/core/http-service";
-import { ProductDetail } from "@/types/product.types";
 import ImageSlider from "./_components/image-slider";
 import ProductInfo from "./_components/product-info";
 import Features from "./_components/features";

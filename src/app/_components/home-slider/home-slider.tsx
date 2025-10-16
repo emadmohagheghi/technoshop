@@ -93,13 +93,13 @@ export default function HomeSlider({ banners, isLoading }: HomeSliderProps) {
           className="home-slider-curved absolute -right-0.5 -bottom-0.5 hidden h-15 justify-between gap-3 bg-[#fff] p-3 md:flex"
         >
           <button
-            onClick={() => instanceRef.current?.next()}
+            onClick={() => instanceRef.current?.prev()}
             className="flex aspect-square w-full cursor-pointer items-center justify-center rounded-[10px] bg-gray-300"
           >
             <ArrowRight2 />
           </button>
           <button
-            onClick={() => instanceRef.current?.prev()}
+            onClick={() => instanceRef.current?.next()}
             className="flex aspect-square w-full cursor-pointer items-center justify-center rounded-[10px] bg-gray-300"
           >
             <ArrowLeft2 />

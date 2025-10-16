@@ -41,7 +41,7 @@ const fetchCurrentUser = async () => {
       user: null,
       status: "unauthenticated" as AuthStatus,
     };
-  } catch (error) {
+  } catch {
     return {
       user: null,
       status: "unauthenticated" as AuthStatus,
