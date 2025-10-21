@@ -4,8 +4,7 @@ import "./globals.css";
 import { Toaster } from "@/app/_components/ui/sonner";
 import Header from "@/app/_components/header/header";
 import QueryProvider from "@/providers/react-query-provider";
-import NextTopLoader from 'nextjs-toploader';
-
+import NextTopLoader from "nextjs-toploader";
 
 const iranyekan = localFont({
   src: [
@@ -34,19 +33,27 @@ const iranyekan = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "TechnoShop",
-  description: "Your one-stop shop for all tech needs.",
-  keywords: ["ecommerce", "online shop", "buy", "sell", "products"],
+  title: "تکنوشاپ | فروشگاه آنلاین محصولات دیجیتال",
+  description:
+    "تکنوشاپ، فروشگاه آنلاین برای خرید موبایل، لپ‌تاپ، لوازم جانبی و محصولات دیجیتال با بهترین قیمت.",
+  keywords: [
+    "تکنوشاپ",
+    "فروشگاه آنلاین",
+    "خرید موبایل",
+    "لوازم دیجیتال",
+    "قیمت لپ‌تاپ",
+  ],
   authors: [{ name: "Emad Mohagheghi", url: "https://emadmo.ir" }],
   creator: "Emad Mohagheghi",
   openGraph: {
-    title: "TechnoShop",
-    description: "Your one-stop shop for all tech needs.",
-    url: "https://technoshop.com",
-    siteName: "TechnoShop",
+    title: "تکنوشاپ | فروشگاه آنلاین محصولات دیجیتال",
+    description:
+      "تکنوشاپ، خرید مطمئن محصولات دیجیتال با ارسال سریع و پشتیبانی ۲۴ ساعته.",
+    url: "https://technoshop.emadmo.ir/",
+    siteName: "تکنوشاپ",
     images: [
       {
-        url: "https://technoshop.com/images/logo.svg",
+        url: "https://technoshop.emadmo.ir/images/logo.svg",
         width: 1200,
         height: 630,
         alt: "TechnoShop logo",
@@ -57,18 +64,16 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "TechnoShop",
-    description: "Your one-stop shop for all tech needs.",
-    creator: "@yourhandle",
-    images: ["https://technoshop.com/images/logo.svg"],
+    title: "تکنوشاپ | فروشگاه آنلاین محصولات دیجیتال",
+    description: "خرید آسان و امن محصولات دیجیتال در تکنوشاپ.",
+    images: ["https://technoshop.emadmo.ir/images/logo.svg"],
   },
   robots: {
     index: true,
     follow: true,
   },
   icons: {
-    icon: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: "/images/favicon.ico",
   },
 };
 

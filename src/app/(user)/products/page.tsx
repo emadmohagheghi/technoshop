@@ -1,6 +1,34 @@
 import { Suspense } from "react";
 import { SortOptions, ProductsGrid, Filters } from "./_components";
 import SpinnerLoading from "@/app/_components/ui/spinner-loading";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "محصولات | تکنوشاپ",
+  description:
+    "مشاهده و خرید انواع محصولات دیجیتال شامل موبایل، لپ‌تاپ، تبلت و لوازم جانبی با بهترین قیمت و کیفیت در تکنوشاپ.",
+  keywords: [
+    "محصولات دیجیتال",
+    "خرید موبایل",
+    "خرید لپ‌تاپ",
+    "لوازم جانبی",
+    "تبلت",
+    "تکنوشاپ",
+  ],
+  openGraph: {
+    title: "محصولات | تکنوشاپ",
+    description: "مشاهده و خرید انواع محصولات دیجیتال با بهترین قیمت",
+    url: "https://technoshop.emadmo.ir/products",
+    siteName: "تکنوشاپ",
+    locale: "fa_IR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "محصولات | تکنوشاپ",
+    description: "مشاهده و خرید انواع محصولات دیجیتال با بهترین قیمت",
+  },
+};
 
 function ProductsContent() {
   return (
