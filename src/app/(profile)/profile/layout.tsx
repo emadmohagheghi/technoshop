@@ -1,85 +1,119 @@
 "use client";
-import { Tabs, TabsList, TabsTrigger } from "@/app/_components/ui/tabs";
 import { User, UserEdit, Bag, Setting } from "iconsax-reactjs";
 import { useUserStore } from "@/stores/user.store";
 import Link from "next/link";
-import { useParams, useRouter, usePathname } from "next/navigation";
-import { useTransition } from "react";
-import SpinnerLoading from "@/app/_components/ui/spinner-loading";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
+import { useRef, useEffect, useState } from "react";
 
-const TriggerList = [
+const navItems = [
   {
-    value: "account",
-    icon: <UserEdit className="hidden size-6 lg:block" />,
+    href: "/profile/account",
+    icon: UserEdit,
     label: "اطلاعات فردی",
   },
   {
-    value: "orders",
-    icon: <Bag className="hidden size-6 lg:block" />,
+    href: "/profile/orders",
+    icon: Bag,
     label: "سفارشات",
   },
   {
-    value: "settings",
-    icon: <Setting className="hidden size-6 lg:block" />,
+    href: "/profile/settings",
+    icon: Setting,
     label: "تنظیمات",
   },
 ];
 
-function TabsListContent({
-  startTransition,
-}: {
-  startTransition: (callback: () => void) => void;
-}) {
+function Sidebar() {
   const { user } = useUserStore();
-  const router = useRouter();
   const pathname = usePathname();
+  const navRef = useRef<HTMLElement>(null);
+  const indicatorRef = useRef<HTMLDivElement>(null);
+  const linksRef = useRef<(HTMLAnchorElement | null)[]>([]);
+  const [mounted, setMounted] = useState(false);
 
-  const handleTabClick = (href: string) => {
-    if (pathname !== href) {
-      startTransition(() => {
-        router.push(href);
-      });
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    const updateIndicator = () => {
+      const activeIndex = navItems.findIndex((item) => item.href === pathname);
+      const activeLink = linksRef.current[activeIndex];
+      const indicator = indicatorRef.current;
+      const nav = navRef.current;
+
+      if (activeLink && indicator && nav) {
+        const linkRect = activeLink.getBoundingClientRect();
+        const navRect = nav.getBoundingClientRect();
+
+        indicator.style.transform = `translate(${linkRect.left - navRect.left}px, ${linkRect.top - navRect.top}px)`;
+        indicator.style.width = `${linkRect.width}px`;
+        indicator.style.height = `${linkRect.height}px`;
+        indicator.style.opacity = "1";
+      }
+    };
+
+    updateIndicator();
+
+    const resizeObserver = new ResizeObserver(updateIndicator);
+    if (navRef.current) {
+      resizeObserver.observe(navRef.current);
     }
-  };
+
+    return () => resizeObserver.disconnect();
+  }, [pathname, mounted]);
 
   return (
     <div className="w-full lg:w-92">
-      <TabsList
-        className="flex w-full flex-row flex-wrap *:h-fit *:justify-start *:py-5.5 *:!text-xl *:!font-medium lg:flex-col"
-        containerColor="bg-white"
-        indicatorColor="bg-brand-primary-content"
+      <nav
+        ref={navRef}
+        className="relative flex w-full flex-row flex-wrap gap-2 rounded-lg bg-white p-2 lg:flex-col"
       >
-        <TabsTrigger
-          disabled
-          value="user"
-          className="text-brand-primary border-brand-primary flex w-full basis-full items-center gap-2 border-b-4 !py-4 text-center disabled:opacity-100 lg:basis-auto"
-        >
+        {/* Sliding Indicator */}
+        <div
+          ref={indicatorRef}
+          className="bg-brand-primary-content absolute top-0 left-0 rounded-lg transition-all duration-300 ease-in-out"
+          style={{ width: 0, height: 0, opacity: 0 }}
+        />
+
+        {/* User Info */}
+        <div className="text-brand-primary border-brand-primary relative z-10 flex w-full basis-full items-center gap-2 rounded-md border border-b-4 px-2 py-4 lg:basis-auto">
           <div className="grid size-16 place-content-center rounded-full bg-gray-200">
             <User className="size-6" />
           </div>
-          <span>
+          <span className="text-xl font-medium">
             {user?.phone || (
               <div className="h-7 w-32 animate-pulse rounded-full bg-gray-300" />
             )}
           </span>
-        </TabsTrigger>
-        {TriggerList.map((trigger) => (
-          <TabsTrigger
-            key={trigger.value}
-            value={trigger.value}
-            asChild
-            className="lg:w-full lg:flex-1"
-          >
+        </div>
+
+        {/* Nav Links */}
+        {navItems.map((item, index) => {
+          const isActive = pathname === item.href;
+          const Icon = item.icon;
+
+          return (
             <Link
-              onClick={() => handleTabClick(`/profile/${trigger.value}`)}
-              href={`/profile/${trigger.value}`}
+              key={item.href}
+              ref={(el) => {
+                linksRef.current[index] = el;
+              }}
+              href={item.href}
+              className={cn(
+                "relative z-10 flex h-fit items-center justify-start gap-1.5 rounded-lg px-2 py-5.5 text-xl font-medium lg:w-full",
+                isActive && "text-brand-primary",
+              )}
             >
-              {trigger.icon}
-              <p className="text-base lg:text-lg">{trigger.label}</p>
+              <Icon className="hidden size-6 lg:block" />
+              <p className="text-base lg:text-lg">{item.label}</p>
             </Link>
-          </TabsTrigger>
-        ))}
-      </TabsList>
+          );
+        })}
+      </nav>
     </div>
   );
 }
@@ -89,28 +123,18 @@ export default function ProfileLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const params = useParams();
-  const [isPending, startTransition] = useTransition();
   return (
     <div>
       <div className="container px-3 py-5">
-        <Tabs
+        <div
           dir="rtl"
-          className="min-h-[calc(100vh-215px)] lg:flex-row"
-          defaultValue={params?.slug as string}
+          className="flex min-h-[calc(100vh-215px)] flex-col gap-2 lg:flex-row"
         >
-          <TabsListContent startTransition={startTransition} />
-
-          <div className="w-full rounded-lg bg-white min-h-[calc(100vh-401px)]">
-            {isPending ? (
-              <div className="flex min-h-[calc(100vh-401px)] lg:h-full w-full items-center justify-center rounded-lg bg-white">
-                <SpinnerLoading className="size-10" />
-              </div>
-            ) : (
-              children
-            )}
+          <Sidebar />
+          <div className="min-h-[calc(100vh-401px)] w-full rounded-lg bg-white">
+            {children}
           </div>
-        </Tabs>
+        </div>
       </div>
     </div>
   );
