@@ -3,24 +3,20 @@ import * as React from "react";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import Image from "next/image";
-import { Banner } from "@/types/banner.types";
 import { Skeleton } from "../ui/skeleton";
 import { imageUrl } from "@/utils/product";
 import { ArrowRight2, ArrowLeft2 } from "iconsax-reactjs";
+import { useBanner } from "@/hooks/use-benner";
 
-type HomeSliderProps = {
-  banners: Banner[];
-  isLoading: boolean;
-};
+export default function HomeSlider() {
+  const { data: banners = [], isFetching, error } = useBanner();
 
-export default function HomeSlider({ banners, isLoading }: HomeSliderProps) {
   const sliderBanners = banners.filter(
     (banner) => banner.position === "HOME_SLIDER_BANNER",
   );
   const sideBanners = banners.filter(
     (banner) => banner.position === "HOME_SIDE_BANNER",
   );
-
 
   const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>(
     {
@@ -61,7 +57,7 @@ export default function HomeSlider({ banners, isLoading }: HomeSliderProps) {
     ],
   );
 
-  if (isLoading)
+  if (isFetching)
     return (
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
         <div className="flex-3 rounded-xl">
@@ -76,21 +72,22 @@ export default function HomeSlider({ banners, isLoading }: HomeSliderProps) {
 
   return (
     <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
-      <div ref={sliderRef} className="keen-slider relative flex-3 rounded-xl">
-        {sliderBanners.map((banner) => (
-          <div key={banner.id} className="keen-slider__slide">
-            <Image
-              src={imageUrl(banner.image.name)}
-              alt={banner.title}
-              width={912}
-              height={412}
-              className="w-full"
-            />
-          </div>
-        ))}
+      <div className="relative flex-3 overflow-hidden rounded-xl">
+        <div ref={sliderRef} className="keen-slider curved">
+          {sliderBanners.map((banner) => (
+            <div key={banner.id} className="keen-slider__slide">
+              <Image
+                src={imageUrl(banner.image.name)}
+                alt={banner.title}
+                width={912}
+                height={412}
+                className="w-full"
+              />
+            </div>
+          ))}
+        </div>
         <div
-          style={{ borderRadius: "22px 0 0 0" }}
-          className="home-slider-curved absolute -right-0.5 -bottom-0.5 hidden h-15 justify-between gap-3 bg-[#fff] p-3 md:flex"
+          className="home-slider-curved absolute -right-0.5 -bottom-0.5 hidden h-15 justify-between gap-3 p-3 md:flex rounded-xl"
         >
           <button
             onClick={() => instanceRef.current?.prev()}
