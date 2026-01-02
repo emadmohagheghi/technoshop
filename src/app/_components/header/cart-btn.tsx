@@ -143,8 +143,11 @@ export default function CartBtn() {
       <div className="hidden lg:block">
         <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
           <PopoverTrigger asChild>
-            <div className="relative cursor-pointer">
-              <ShoppingCart size="32" />
+            <button
+              className="relative cursor-pointer"
+              aria-label={`سبد خرید، ${totalItems} آیتم`}
+            >
+              <ShoppingCart size="32" aria-hidden="true" />
               {totalItems > 0 && (
                 <Badge
                   variant="destructive"
@@ -153,7 +156,7 @@ export default function CartBtn() {
                   {totalItems}
                 </Badge>
               )}
-            </div>
+            </button>
           </PopoverTrigger>
           <PopoverContent className="w-80 lg:w-96" align="end">
             <div className="space-y-3">

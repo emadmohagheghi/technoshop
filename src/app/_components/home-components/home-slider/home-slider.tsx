@@ -86,20 +86,20 @@ export default function HomeSlider() {
             </div>
           ))}
         </div>
-        <div
-          className="home-slider-curved absolute -right-0.5 -bottom-0.5 hidden h-15 justify-between gap-3 p-3 md:flex rounded-xl"
-        >
+        <div className="home-slider-curved absolute -right-0.5 -bottom-0.5 hidden h-15 justify-between gap-3 rounded-xl p-3 md:flex">
           <button
             onClick={() => instanceRef.current?.prev()}
+            aria-label="اسلاید قبلی"
             className="flex aspect-square w-full cursor-pointer items-center justify-center rounded-[10px] bg-gray-300"
           >
-            <ArrowRight2 />
+            <ArrowRight2 aria-hidden="true" />
           </button>
           <button
             onClick={() => instanceRef.current?.next()}
+            aria-label="اسلاید بعدی"
             className="flex aspect-square w-full cursor-pointer items-center justify-center rounded-[10px] bg-gray-300"
           >
-            <ArrowLeft2 />
+            <ArrowLeft2 aria-hidden="true" />
           </button>
         </div>
       </div>

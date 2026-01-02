@@ -25,9 +25,16 @@ export default function ProductCarousel({
             {title}
           </h3>
           {link && (
-            <Link className="flex items-center text-xs lg:text-lg" href={link}>
+            <Link
+              className="flex items-center text-xs lg:text-lg"
+              href={link}
+              aria-label={`مشاهده همه ${title}`}
+            >
               مشاهده همه
-              <ArrowLeft2 className="size-[14px] lg:size-[20px]" />
+              <ArrowLeft2
+                className="size-[14px] lg:size-[20px]"
+                aria-hidden="true"
+              />
             </Link>
           )}
         </div>

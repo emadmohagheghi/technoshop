@@ -19,18 +19,19 @@ export default function OffersCarousel() {
           className=""
         >
           <div className="flex h-full flex-col items-center justify-around px-1 lg:px-9">
-            <h5 className="text-base font-medium text-white lg:text-4xl">
+            <h2 className="text-base font-medium text-white lg:text-4xl">
               تخفیف های
               <br />
               شگفت انگیز
-            </h5>
+            </h2>
             <Timer initialSeconds={3600} />
             <Link
               href="/products?special=true"
               className="flex content-end items-center self-start text-xs text-white lg:text-base"
+              aria-label="مشاهده همه تخفیف‌های شگفت‌انگیز"
             >
               مشاهده همه
-              <ArrowLeft2 className="size-3 lg:size-4" />
+              <ArrowLeft2 className="size-3 lg:size-4" aria-hidden="true" />
             </Link>
           </div>
           {!isFetching &&
