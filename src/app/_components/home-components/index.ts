@@ -1,0 +1,8 @@
+export { BrandCarousel } from "./brand-carousel";
+export { CategoryCarousel } from "./category-carousel";
+export { FAQSection } from "./faq";
+export { Features } from "./features";
+export { HomeSlider } from "./home-slider";
+export { OffersCarousel } from "./offers-carousel";
+export { SecondHomeSlider } from "./second-home-slider";
+export { WatchBanner } from "./watch-banner";

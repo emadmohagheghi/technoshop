@@ -1,19 +1,21 @@
 "use client";
-import { HomeSlider } from "@/app/_components/home-slider";
 import { useHeaderStore } from "@/stores/header-data.store";
-import { CategorySlider } from "@/app/_components/category-slider";
 import { ProductCarousel } from "@/app/_components/product-carousel";
 import {
   useGetNewestProducts,
   useGetSpecialProducts,
   useGetBestSellingProducts,
 } from "@/hooks/use-products";
-import { OffersCarousel } from "@/app/_components/offers-carousel";
-import SecondHomeSlider from "@/app/_components/second-home-slider";
-import BrandCarousel from "@/app/_components/brand-slider/brand-slider";
-import WatchBanner from "@/app/_components/watch-banner";
-import FAQSection from "@/app/_components/faq";
-import Features from "@/app/_components/features";
+import {
+  BrandCarousel,
+  CategoryCarousel,
+  FAQSection,
+  Features,
+  HomeSlider,
+  OffersCarousel,
+  SecondHomeSlider,
+  WatchBanner,
+} from "@/app/_components/home-components";
 
 export default function Home() {
   const categories = useHeaderStore((state) => state.categories);
@@ -27,13 +29,12 @@ export default function Home() {
     isFetching: isGettingBestSellingProducts,
   } = useGetBestSellingProducts();
 
-
   return (
     <div className="">
       <div className="container mb-6 space-y-6 p-3 lg:space-y-12">
         <HomeSlider />
 
-        <CategorySlider categories={categories} />
+        <CategoryCarousel categories={categories} />
 
         <OffersCarousel
           products={specialProducts}

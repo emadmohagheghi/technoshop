@@ -3,7 +3,7 @@ import * as React from "react";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import Image from "next/image";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/app/_components/ui/skeleton";
 import { imageUrl } from "@/utils/product";
 import { ArrowRight2, ArrowLeft2 } from "iconsax-reactjs";
 import { useBanner } from "@/hooks/use-benner";
@@ -57,7 +57,7 @@ export default function HomeSlider() {
     ],
   );
 
-  if (isFetching)
+  if (isFetching || error)
     return (
       <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
         <div className="flex-3 rounded-xl">
