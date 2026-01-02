@@ -1,3 +1,4 @@
+"use client";
 import React, { useEffect, useCallback } from "react";
 import { useKeenSlider } from "keen-slider/react";
 import type { KeenSliderOptions } from "keen-slider";

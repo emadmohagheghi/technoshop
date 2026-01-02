@@ -1,16 +1,14 @@
 "use client";
 import Carousel from "@/app/_components/ui/carousel";
-import { Category } from "@/types/categories.types";
 import Link from "next/link";
 import Image from "next/image";
 import { imageUrl } from "@/utils/product";
 import { Skeleton } from "@/app/_components/ui/skeleton";
+import { useHeaderStore } from "@/stores/header-data.store";
 
-type CategoryCarouselProps = {
-  categories: Category[];
-};
 
-export default function CategoryCarousel({ categories }: CategoryCarouselProps) {
+export default function CategoryCarousel() {
+  const categories = useHeaderStore((state) => state.categories);
   if (categories.length <= 0) {
     return (
       <div className="flex items-center justify-start gap-6 overflow-hidden *:shrink-0">

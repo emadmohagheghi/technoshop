@@ -1,11 +1,3 @@
-"use client";
-import { useHeaderStore } from "@/stores/header-data.store";
-import { ProductCarousel } from "@/app/_components/product-carousel";
-import {
-  useGetNewestProducts,
-  useGetSpecialProducts,
-  useGetBestSellingProducts,
-} from "@/hooks/use-products";
 import {
   BrandCarousel,
   CategoryCarousel,
@@ -15,48 +7,27 @@ import {
   OffersCarousel,
   SecondHomeSlider,
   WatchBanner,
+  RecommendedProducts,
+  NewestProducts,
 } from "@/app/_components/home-components";
 
 export default function Home() {
-  const categories = useHeaderStore((state) => state.categories);
-  const brands = useHeaderStore((state) => state.brands);
-  const { data: newestProducts = [], isFetching: isGettingNewestProducts } =
-    useGetNewestProducts();
-  const { data: specialProducts = [], isFetching: isGettingSpecialProducts } =
-    useGetSpecialProducts();
-  const {
-    data: bestSellingProducts = [],
-    isFetching: isGettingBestSellingProducts,
-  } = useGetBestSellingProducts();
-
   return (
-    <div className="">
+    <div>
       <div className="container mb-6 space-y-6 p-3 lg:space-y-12">
         <HomeSlider />
 
-        <CategoryCarousel categories={categories} />
+        <CategoryCarousel />
 
-        <OffersCarousel
-          products={specialProducts}
-          isLoading={isGettingSpecialProducts}
-        />
+        <OffersCarousel />
 
-        <ProductCarousel
-          isLoading={isGettingNewestProducts}
-          products={newestProducts}
-          title="جدیدترین محصولات"
-          link="/"
-        />
+        <NewestProducts />
 
         <SecondHomeSlider />
 
-        <ProductCarousel
-          isLoading={isGettingBestSellingProducts}
-          products={bestSellingProducts}
-          title="پیشنهادات"
-        />
+        <RecommendedProducts />
 
-        <BrandCarousel brands={brands} />
+        <BrandCarousel />
 
         <WatchBanner />
 

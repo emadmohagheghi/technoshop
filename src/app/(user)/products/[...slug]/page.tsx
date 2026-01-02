@@ -57,7 +57,7 @@ export async function generateMetadata({
         images: [imageUrl],
       },
     };
-  } catch (error) {
+  } catch {
     return {
       title: "محصول | تکنوشاپ",
       description: "مشاهده جزئیات محصول در تکنوشاپ",

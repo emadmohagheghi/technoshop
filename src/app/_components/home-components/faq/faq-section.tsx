@@ -53,7 +53,7 @@ export default function FAQSection() {
           سوالات متداول
         </h2>
 
-        <div className="">
+        <div>
           <Accordion type="single" collapsible className="w-full space-y-4">
             {faqData.map((faq) => (
               <AccordionItem

@@ -1,10 +1,13 @@
+"use client";
 import Carousel from "@/app/_components/ui/carousel";
-import { Brand } from "@/types/brand.types";
+import { useHeaderStore } from "@/stores/header-data.store";
 import { imageUrl } from "@/utils/product";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function BrandCarousel({ brands }: { brands: Brand[] }) {
+export default function BrandCarousel() {
+  const brands = useHeaderStore((state) => state.brands);
+
   return (
     <div>
       <h2 className="border-brand-primary text-brand-primary border-b-2 text-2xl font-bold lg:text-3xl lg:font-medium">

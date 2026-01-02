@@ -6,3 +6,5 @@ export { HomeSlider } from "./home-slider";
 export { OffersCarousel } from "./offers-carousel";
 export { SecondHomeSlider } from "./second-home-slider";
 export { WatchBanner } from "./watch-banner";
+export { RecommendedProducts } from "./recommended-products";
+export { NewestProducts } from "./newest-products";

@@ -1,26 +1,19 @@
-import { Product } from "@/types/product.types";
+"use client";
 import Carousel from "@/app/_components/ui/carousel";
 import ProductCard from "@/app/_components/ui/product-card";
 import Timer from "./timer";
 import Link from "next/link";
 import { ArrowLeft2 } from "iconsax-reactjs";
 import ProductCardSkeleton from "@/app/_components/ui/product-card-skeleton";
+import { useGetSpecialProducts } from "@/hooks/use-products";
 
-export default function OffersCarousel({
-  products,
-  isLoading,
-}: {
-  products: Product[];
-  isLoading: boolean;
-}) {
-  // if (isLoading) {
-  //   return <div className="bg-brand-primary h-90 w-full"></div>;
-  // }
+export default function OffersCarousel() {
+  const { data: products = [], isFetching, isError } = useGetSpecialProducts();
   return (
     <>
       <div className="bg-brand-primary rounded-2xl px-4 py-4 lg:py-6">
         <Carousel
-          key={isLoading ? "loading" : "loaded"}
+          key={isFetching ? "loading" : "loaded"}
           rtl
           slides={{ perView: "auto", spacing: 8 }}
           className=""
@@ -40,9 +33,10 @@ export default function OffersCarousel({
               <ArrowLeft2 className="size-3 lg:size-4" />
             </Link>
           </div>
-          {!isLoading &&
+          {!isFetching &&
+            !isError &&
             products.map((item) => <ProductCard key={item.id} {...item} />)}
-          {isLoading &&
+          {(isFetching || isError) &&
             Array(8)
               .fill(true)
               .map((_, index) => (
