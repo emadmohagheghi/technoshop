@@ -2,7 +2,6 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "@/app/_components/ui/sonner";
-import Header from "@/app/_components/header/header";
 import QueryProvider from "@/providers/react-query-provider";
 import NextTopLoader from "nextjs-toploader";
 
@@ -91,8 +90,7 @@ export default function RootLayout({
       <body className={`${iranyekan.variable} antialiased`}>
         <NextTopLoader showSpinner={false} color="var(--color-primary)" />
         <QueryProvider>
-          <Header />
-          <main className="pt-[62px] lg:pt-[175px]">{children}</main>
+          {children}
           <Toaster />
         </QueryProvider>
       </body>

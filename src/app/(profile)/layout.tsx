@@ -1,7 +1,6 @@
-import Footer from "@/app/_components/footer";
 import Header from "@/app/_components/header/header";
 
-export default function UserLayout({
+export default function ProfileGroupLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -10,7 +9,6 @@ export default function UserLayout({
     <>
       <Header />
       <main className="pt-[62px] lg:pt-[175px]">{children}</main>
-      <Footer />
     </>
   );
 }
