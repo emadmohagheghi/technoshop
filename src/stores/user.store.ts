@@ -7,6 +7,7 @@ import {
   updateNationalCode,
   UpdateNationalCodeRequest,
 } from "@/services/users-service";
+import { useCartStore } from "@/stores/cart.store";
 
 type AuthStatus = "authenticated" | "unauthenticated" | "loading";
 
@@ -14,7 +15,7 @@ interface SessionState {
   user: UserInfo | null;
   status: AuthStatus;
   clearSession: () => void;
-  updateSession: () => Promise<void>;
+  updateSession: () => Promise<boolean>;
   logout: () => Promise<void>;
   updateUserInfo: (
     data: UpdateUserDetailsRequest,
@@ -63,12 +64,16 @@ export const useUserStore = create<SessionState>((set, get) => ({
     try {
       const { user, status } = await fetchCurrentUser();
       set({ user, status });
+      await useCartStore.getState().initialize(status === "authenticated");
+      return status === "authenticated";
     } catch (error) {
       console.error("Failed to update session:", error);
       set({
         user: null,
         status: "unauthenticated" as AuthStatus,
       });
+      await useCartStore.getState().initialize(false);
+      return false;
     }
   },
 
@@ -80,6 +85,7 @@ export const useUserStore = create<SessionState>((set, get) => ({
         user: null,
         status: "unauthenticated" as AuthStatus,
       });
+      await useCartStore.getState().initialize(false);
     } catch (error) {
       console.error("Logout failed:", error);
       set({

@@ -4,7 +4,7 @@ import { ShoppingCart, Add, Minus, Trash } from "iconsax-reactjs";
 import { useCartStore } from "@/stores/cart.store";
 import { Badge } from "@/app/_components/ui/badge";
 import { Button } from "@/app/_components/ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import {
@@ -27,8 +27,8 @@ function CartItem({
     isLoading,
     error,
   } = useGetProductByShortSlug(short_slug);
-  const addOne = useCartStore((state) => state.addOne);
-  const removeOne = useCartStore((state) => state.removeOne);
+  const setQuantity = useCartStore((state) => state.setQuantity);
+  const isPending = useCartStore((state) => state.isPending(short_slug));
 
   if (isLoading) {
     return (
@@ -61,6 +61,13 @@ function CartItem({
       ? special_sale_price
       : sale_price;
 
+  const stockLimit = product.product_class.track_stock
+    ? product.stockrecord.num_stock
+    : 100;
+  const maxQuantity = Math.min(
+    stockLimit,
+    product.stockrecord.in_order_limit ?? 100,
+  );
   return (
     <div className="flex items-start gap-3 border-b border-gray-100 p-3 last:border-b-0">
       <div className="relative size-16 overflow-hidden rounded bg-gray-50">
@@ -97,7 +104,8 @@ function CartItem({
               variant="ghost"
               size="sm"
               className="size-8 p-0"
-              onClick={() => addOne({ short_slug })}
+              disabled={isPending || quantity >= maxQuantity}
+              onClick={() => void setQuantity(short_slug, quantity + 1)}
             >
               <Add size="16" color="var(--color-success)" />
             </Button>
@@ -108,7 +116,8 @@ function CartItem({
               variant="ghost"
               size="sm"
               className="size-8 p-0"
-              onClick={() => removeOne({ short_slug })}
+              disabled={isPending}
+              onClick={() => void setQuantity(short_slug, quantity - 1)}
             >
               {quantity === 1 ? (
                 <Trash size="16" color="var(--color-error)" />
@@ -128,10 +137,6 @@ export default function CartBtn() {
   const cart = useCartStore((state) => state.cart);
   const router = useRouter();
   const [popoverOpen, setPopoverOpen] = useState(false);
-
-  useEffect(() => {
-    useCartStore.persist.rehydrate();
-  }, []);
 
   const handleViewCart = () => {
     setPopoverOpen(false);

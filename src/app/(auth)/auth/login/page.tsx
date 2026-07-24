@@ -21,6 +21,9 @@ import { createData } from "@/core/http-service";
 import { toast } from "sonner";
 import { useAuth } from "@/stores/user.store";
 
+const LOGIN_SESSION_ERROR =
+  "\u0646\u0634\u0633\u062a \u0648\u0631\u0648\u062f \u062a\u0623\u06cc\u06cc\u062f \u0646\u0634\u062f. \u062f\u0648\u0628\u0627\u0631\u0647 \u062a\u0644\u0627\u0634 \u06a9\u0646\u06cc\u062f.";
+
 type Steps = "CHECK" | "PASSWORD" | "OTP";
 
 export default function LoginPage() {
@@ -110,7 +113,7 @@ interface StepsProps {
   step: Steps;
   setStep: (value: Steps) => void;
   router: ReturnType<typeof useRouter>;
-  updateSession: () => Promise<void>;
+  updateSession: () => Promise<boolean>;
 }
 
 function StepCheck({ username, setUsername, setStep }: StepsProps) {
@@ -199,10 +202,14 @@ function StepPassword({ username, router, updateSession }: StepsProps) {
       >("/api/users/authenticate/password/", { username, password });
 
       if (response.success) {
-        await updateSession();
+        const isAuthenticated = await updateSession();
+        if (!isAuthenticated) {
+          toast.error(LOGIN_SESSION_ERROR);
+          return;
+        }
 
         toast.success("ورود موفق");
-        router.push("/");
+        router.replace("/");
       } else {
         toast.error("رمز عبور اشتباه است");
       }
@@ -262,10 +269,14 @@ function StepOTP({ username, router, updateSession }: StepsProps) {
         >("/api/users/authenticate/otp/", { username, otp: value });
 
         if (response.success) {
-          await updateSession();
+          const isAuthenticated = await updateSession();
+          if (!isAuthenticated) {
+            toast.error(LOGIN_SESSION_ERROR);
+            return;
+          }
 
           toast.success("ورود موفق");
-          router.push("/");
+          router.replace("/");
         } else {
           setOtp("");
           toast.error("کد تایید اشتباه است");

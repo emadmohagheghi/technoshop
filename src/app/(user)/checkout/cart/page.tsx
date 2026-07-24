@@ -5,7 +5,9 @@ import { getProductByShortSlug } from "@/services/products-service";
 import OrderedProducts from "./_components/ordered-products";
 
 export default function CartPage() {
-  const { cart, addOne, removeOne, removeAllOfProduct } = useCartStore();
+  const cart = useCartStore((state) => state.cart);
+  const cartStatus = useCartStore((state) => state.status);
+  const setQuantity = useCartStore((state) => state.setQuantity);
 
   // استفاده از useQueries برای دریافت همزمان اطلاعات تمام محصولات
   const productQueries = useQueries({
@@ -16,7 +18,8 @@ export default function CartPage() {
     })),
   });
 
-  const isLoading = productQueries.some((query) => query.isLoading);
+  const isLoading =
+    cartStatus !== "ready" || productQueries.some((query) => query.isLoading);
   const products = productQueries
     .map((query) => query.data)
     .filter((product) => product !== undefined);
@@ -44,19 +47,10 @@ export default function CartPage() {
             cart={cart}
             products={products}
             isLoading={isLoading}
-            onUpdateQuantity={(short_slug: number, newQuantity: number) => {
-              const currentQuantity =
-                cart.find((item) => item.short_slug === short_slug)?.quantity ||
-                0;
-              if (newQuantity > currentQuantity) {
-                addOne({ short_slug });
-              } else if (newQuantity < currentQuantity) {
-                removeOne({ short_slug });
-              }
-            }}
-            onRemoveProduct={(short_slug: number) => {
-              removeAllOfProduct({ short_slug });
-            }}
+            onUpdateQuantity={(short_slug, quantity) =>
+              void setQuantity(short_slug, quantity)
+            }
+            onRemoveProduct={(short_slug) => void setQuantity(short_slug, 0)}
           />
         </div>
       </div>

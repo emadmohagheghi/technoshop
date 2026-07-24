@@ -7,6 +7,7 @@ import OrderSummary from "./order-summery";
 
 export default function OrderSummaryWrapper() {
   const cart = useCartStore((state) => state.cart);
+  const cartStatus = useCartStore((state) => state.status);
 
   // Extract short_slugs from cart items for fetching products
   const cartItemSlugs = cart.map((item) => item.short_slug);
@@ -26,7 +27,7 @@ export default function OrderSummaryWrapper() {
     enabled: cartItemSlugs.length > 0,
   });
 
-  if (isLoading && cartItemSlugs.length > 0) {
+  if (cartStatus !== "ready" || (isLoading && cartItemSlugs.length > 0)) {
     return (
       <div className="lg:col-span-1">
         <div className="animate-pulse rounded-lg bg-gray-200 p-6">

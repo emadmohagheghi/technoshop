@@ -12,6 +12,7 @@ import {
   TruckFast,
 } from "iconsax-reactjs";
 import Link from "next/link";
+import { useCartStore } from "@/stores/cart.store";
 
 export default function ProductCard({
   product,
@@ -24,6 +25,16 @@ export default function ProductCard({
   onUpdateQuantity: (newQuantity: number) => void;
   onRemove: () => void;
 }) {
+  const isPending = useCartStore((state) =>
+    state.isPending(product.short_slug),
+  );
+  const stockLimit = product.product_class.track_stock
+    ? product.stockrecord.num_stock
+    : 100;
+  const maxQuantity = Math.min(
+    stockLimit,
+    product.stockrecord.in_order_limit ?? 100,
+  );
   const hasSpecialPrice =
     product.stockrecord.special_sale_price &&
     product.stockrecord.special_sale_price < product.stockrecord.sale_price;
@@ -51,11 +62,7 @@ export default function ProductCard({
               size="sm"
               onClick={() => onUpdateQuantity(quantity + 1)}
               className="h-6 w-6 cursor-pointer p-0"
-              disabled={
-                product.stockrecord.in_order_limit
-                  ? quantity >= product.stockrecord.in_order_limit
-                  : false
-              }
+              disabled={isPending || quantity >= maxQuantity}
             >
               <Add className="text-success h-3 w-3" />
             </Button>
@@ -67,7 +74,7 @@ export default function ProductCard({
               size="sm"
               onClick={() => onUpdateQuantity(Math.max(1, quantity - 1))}
               className="h-6 w-6 cursor-pointer p-0"
-              disabled={quantity <= 1}
+              disabled={isPending || quantity <= 1}
             >
               <Minus className="text-error h-3 w-3" />
             </Button>
@@ -77,6 +84,7 @@ export default function ProductCard({
             size="sm"
             onClick={onRemove}
             className="h-8 w-8 cursor-pointer p-0"
+            disabled={isPending}
           >
             <Trash className="text-error h-4 w-4" />
           </Button>

@@ -9,8 +9,15 @@ export default function ProductInfo({
   title_ir,
   stockrecord,
   short_slug,
+  product_class,
 }: ProductDetail) {
   const { special_sale_price, sale_price } = stockrecord;
+  const stockLimit = product_class.track_stock
+    ? stockrecord.num_stock
+    : Number.POSITIVE_INFINITY;
+  const orderLimit = stockrecord.in_order_limit ?? 100;
+  const maxQuantity = Math.max(0, Math.min(stockLimit, orderLimit, 100));
+
   return (
     <div className="flex w-full flex-col gap-3 pt-10">
       <h1 className="text-xl font-bold lg:font-medium">{title_ir}</h1>
@@ -40,7 +47,7 @@ export default function ProductInfo({
         </span>
       </p>
       <div className="flex w-full gap-3">
-        <AddToCart short_slug={short_slug} />
+        <AddToCart short_slug={short_slug} maxQuantity={maxQuantity} />
         <Comparison />
       </div>
     </div>

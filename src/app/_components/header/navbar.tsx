@@ -39,10 +39,6 @@ export default function Navbar() {
     };
   }, [lastScrollY, handleScroll]);
 
-  useEffect(() => {
-    useCartStore.persist.rehydrate();
-  }, []);
-
   return (
     <>
       <div

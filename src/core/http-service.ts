@@ -31,7 +31,7 @@ httpService.interceptors.response.use(
       const statusCode = error?.response?.status;
       if (statusCode >= 400) {
         const errorData: ApiError = error.response?.data;
-        errorHandler[statusCode](errorData);
+        (errorHandler[statusCode] ?? errorHandler[500])(errorData);
       }
     } else {
       networkErrorStrategy();
@@ -88,16 +88,18 @@ async function updateData<TModel, TResult>(
   return await apiBase<TResult>(url, options);
 }
 
-async function deleteData(
+async function deleteData<TResult = void>(
   url: string,
+  data?: unknown,
   headers?: AxiosRequestHeaders,
-): Promise<ApiResponseType<void>> {
+): Promise<ApiResponseType<TResult>> {
   const options: AxiosRequestConfig = {
     method: "DELETE",
     headers: headers,
+    data: data === undefined ? undefined : JSON.stringify(data),
   };
 
-  return await apiBase(url, options);
+  return await apiBase<TResult>(url, options);
 }
 
 // Logout function - فقط Cookie authentication
