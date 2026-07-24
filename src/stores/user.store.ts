@@ -8,6 +8,7 @@ import {
   UpdateNationalCodeRequest,
 } from "@/services/users-service";
 import { useCartStore } from "@/stores/cart.store";
+import { useFavoritesStore } from "@/stores/favorites.store";
 
 type AuthStatus = "authenticated" | "unauthenticated" | "loading";
 
@@ -64,7 +65,10 @@ export const useUserStore = create<SessionState>((set, get) => ({
     try {
       const { user, status } = await fetchCurrentUser();
       set({ user, status });
-      await useCartStore.getState().initialize(status === "authenticated");
+      await Promise.all([
+        useCartStore.getState().initialize(status === "authenticated"),
+        useFavoritesStore.getState().initialize(status === "authenticated"),
+      ]);
       return status === "authenticated";
     } catch (error) {
       console.error("Failed to update session:", error);
@@ -72,11 +76,13 @@ export const useUserStore = create<SessionState>((set, get) => ({
         user: null,
         status: "unauthenticated" as AuthStatus,
       });
-      await useCartStore.getState().initialize(false);
+      await Promise.all([
+        useCartStore.getState().initialize(false),
+        useFavoritesStore.getState().initialize(false),
+      ]);
       return false;
     }
   },
-
   logout: async () => {
     try {
       await logoutUser();
@@ -85,7 +91,10 @@ export const useUserStore = create<SessionState>((set, get) => ({
         user: null,
         status: "unauthenticated" as AuthStatus,
       });
-      await useCartStore.getState().initialize(false);
+      await Promise.all([
+        useCartStore.getState().initialize(false),
+        useFavoritesStore.getState().initialize(false),
+      ]);
     } catch (error) {
       console.error("Logout failed:", error);
       set({
