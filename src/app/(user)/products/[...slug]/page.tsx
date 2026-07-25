@@ -2,6 +2,7 @@ import ImageSlider from "./_components/image-slider";
 import ProductInfo from "./_components/product-info";
 import Features from "./_components/features";
 import ProductTabs from "./_components/product-tabs/product-tabs";
+import RecentProductTracker from "./_components/recent-product-tracker";
 import { getProductByShortSlug } from "@/services/products-service";
 import type { Metadata } from "next";
 
@@ -77,6 +78,7 @@ export default async function ProductPage({
 
   return (
     <div>
+      <RecentProductTracker productId={product.id} />
       <div className="container p-3">
         <div className="flex flex-col gap-2 lg:flex-row">
           <div className="flex w-full justify-center lg:w-4/12">

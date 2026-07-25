@@ -2,6 +2,7 @@ import { createData, deleteData, readData } from "@/core/http-service";
 import { Product } from "@/types/product.types";
 
 const FAVORITES_URL = "/api/users/favorite/";
+const FAVORITES_CLEAR_URL = "/api/users/favorite/clear/";
 
 export async function getFavoriteProducts(): Promise<Product[]> {
   const response = await readData<Product[]>(FAVORITES_URL);
@@ -24,4 +25,8 @@ export async function mergeFavoriteProducts(
 
 export async function removeFavoriteProduct(productId: number): Promise<void> {
   await deleteData(FAVORITES_URL, { product_id: productId });
+}
+
+export async function clearFavoriteProducts(): Promise<void> {
+  await deleteData(FAVORITES_CLEAR_URL);
 }
