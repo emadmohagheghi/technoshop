@@ -1,10 +1,11 @@
 import {
+  createData,
   deleteData,
   readData,
   updateData,
-  createData,
 } from "@/core/http-service";
 import { ApiResponseType } from "@/types/response";
+import { getHttpErrorStatus } from "@/utils/http-error";
 
 export type ServerCartItem = {
   short_slug: number;
@@ -37,11 +38,46 @@ export function clearServerCart(): Promise<ApiResponseType<ServerCart>> {
   return deleteData<ServerCart>(CART_URL);
 }
 
-export function mergeGuestCart(
+async function mergeGuestCartWithLegacyApi(items: ServerCartItem[]) {
+  let response = await getCart();
+
+  for (const item of items) {
+    if (
+      !Number.isInteger(item.short_slug) ||
+      !Number.isInteger(item.quantity) ||
+      item.quantity <= 0
+    ) {
+      continue;
+    }
+
+    const currentQuantity =
+      response.data.items.find(
+        (serverItem) => serverItem.short_slug === item.short_slug,
+      )?.quantity ?? 0;
+
+    try {
+      response = await setServerCartQuantity({
+        short_slug: item.short_slug,
+        quantity: Math.min(100, currentQuantity + item.quantity),
+      });
+    } catch {
+      // A stale or unavailable guest item must not block the rest of the merge.
+    }
+  }
+
+  return response;
+}
+
+export async function mergeGuestCart(
   items: ServerCartItem[],
 ): Promise<ApiResponseType<ServerCart>> {
-  return createData<{ items: ServerCartItem[] }, ServerCart>(
-    `${CART_URL}merge/`,
-    { items },
-  );
+  try {
+    return await createData<{ items: ServerCartItem[] }, ServerCart>(
+      `${CART_URL}merge/`,
+      { items },
+    );
+  } catch (error) {
+    if (getHttpErrorStatus(error) !== 404) throw error;
+    return mergeGuestCartWithLegacyApi(items);
+  }
 }
