@@ -106,7 +106,15 @@ export function NationalCode() {
 
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
-          <Edit className="text-brand-primary hover:text-brand-primary-focus size-6 cursor-pointer" />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label="ویرایش کد ملی"
+            className="text-brand-primary hover:text-brand-primary-focus"
+          >
+            <Edit className="size-5" />
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader dir="ltr">

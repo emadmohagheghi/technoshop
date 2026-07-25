@@ -10,12 +10,10 @@ export type UserInfo = {
   is_superuser: boolean;
   is_verify: boolean;
   has_password: boolean;
-  search_histories: [
-    {
-      id: number;
-      search: string;
-    },
-  ][];
+  search_histories: {
+    id: number;
+    search: string;
+  }[];
 };
 
 export const first_name = v.pipe(

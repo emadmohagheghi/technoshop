@@ -86,7 +86,8 @@ export default function EditName() {
         <p className="mb-1 text-sm text-gray-600">نام و نام خانوادگی</p>
         <p
           className={cn("text-lg font-medium", {
-            "h-7 w-40 animate-pulse rounded-full bg-gray-300": status === "loading",
+            "h-7 w-40 animate-pulse rounded-full bg-gray-300":
+              status === "loading",
           })}
         >
           {!(status === "loading") && (user?.full_name || "نامشخص")}
@@ -94,7 +95,15 @@ export default function EditName() {
       </div>
       <Dialog open={isOpen} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
-          <Edit className="text-brand-primary hover:text-brand-primary-focus size-6 cursor-pointer" />
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label="ویرایش نام و نام خانوادگی"
+            className="text-brand-primary hover:text-brand-primary-focus"
+          >
+            <Edit className="size-5" />
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader dir="ltr">
@@ -135,7 +144,11 @@ export default function EditName() {
                   انصراف
                 </Button>
               </DialogClose>
-              <Button type="submit" className="bg-brand-primary hover:bg-brand-primary-focus" disabled={isLoading}>
+              <Button
+                type="submit"
+                className="bg-brand-primary hover:bg-brand-primary-focus"
+                disabled={isLoading}
+              >
                 {isLoading ? "در حال ذخیره..." : "ذخیره تغییرات"}
               </Button>
             </DialogFooter>
