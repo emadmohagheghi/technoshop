@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/app/_components/ui/button";
+import { prefetchProfileRouteData } from "@/lib/profile-queries";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/stores/user.store";
 import {
@@ -15,6 +16,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
+import { useCallback, useEffect } from "react";
 import { toast } from "sonner";
 
 const navItems = [
@@ -39,6 +42,23 @@ export default function ProfileLayout({
   const { user, status, logout } = useUserStore();
   const pathname = usePathname();
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const prefetchProfileItem = useCallback(
+    (href: string) => {
+      router.prefetch(href);
+      void prefetchProfileRouteData(queryClient, href);
+    },
+    [queryClient, router],
+  );
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      navItems.forEach((item) => router.prefetch(item.href));
+    }, 150);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [router]);
+
   const currentItem =
     navItems.find((item) => isItemActive(pathname, item.href, item.exact)) ??
     navItems[0];
@@ -65,7 +85,11 @@ export default function ProfileLayout({
           <select
             id="profile-mobile-nav"
             value={currentItem.href}
-            onChange={(event) => router.push(event.target.value)}
+            onChange={(event) => {
+              const href = event.target.value;
+              prefetchProfileItem(href);
+              router.push(href);
+            }}
             className="focus:border-brand-primary mt-3 h-11 w-full rounded-lg border bg-white px-3 text-sm outline-none"
           >
             {navItems.map((item) => (
@@ -99,6 +123,8 @@ export default function ProfileLayout({
                     key={item.href}
                     href={item.href}
                     aria-current={active ? "page" : undefined}
+                    onMouseEnter={() => prefetchProfileItem(item.href)}
+                    onFocus={() => prefetchProfileItem(item.href)}
                     className={cn(
                       "flex items-center gap-3 rounded-lg px-3 py-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100",
                       active &&

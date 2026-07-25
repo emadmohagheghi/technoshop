@@ -2,7 +2,7 @@ import { getAddresses } from "@/services/addresses-service";
 import { getFavoriteProducts } from "@/services/favorites-service";
 import { getProfileOrder, getProfileOrders } from "@/services/orders-service";
 import { getRecentProducts } from "@/services/recent-products-service";
-import { queryOptions } from "@tanstack/react-query";
+import { queryOptions, type QueryClient } from "@tanstack/react-query";
 
 const PROFILE_GC_TIME = 1000 * 60 * 30;
 const PROFILE_STALE_TIME = 1000 * 60 * 5;
@@ -56,3 +56,27 @@ export const profileAddressesQueryOptions = () =>
     staleTime: ADDRESSES_STALE_TIME,
     gcTime: PROFILE_GC_TIME,
   });
+
+export function prefetchProfileRouteData(
+  queryClient: QueryClient,
+  href: string,
+) {
+  switch (href) {
+    case "/profile":
+      return Promise.all([
+        queryClient.prefetchQuery(profileOrdersQueryOptions()),
+        queryClient.prefetchQuery(profileFavoritesQueryOptions()),
+        queryClient.prefetchQuery(profileRecentQueryOptions()),
+      ]);
+    case "/profile/orders":
+      return queryClient.prefetchQuery(profileOrdersQueryOptions());
+    case "/profile/favorites":
+      return queryClient.prefetchQuery(profileFavoritesQueryOptions());
+    case "/profile/recent":
+      return queryClient.prefetchQuery(profileRecentQueryOptions());
+    case "/profile/addresses":
+      return queryClient.prefetchQuery(profileAddressesQueryOptions());
+    default:
+      return Promise.resolve();
+  }
+}
