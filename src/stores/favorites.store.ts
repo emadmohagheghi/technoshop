@@ -1,3 +1,5 @@
+import { profileQueryKeys } from "@/lib/profile-queries";
+import { queryClient } from "@/lib/react-query";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import {
@@ -86,6 +88,7 @@ export const useFavoritesStore = create<FavoritesStore>()(
 
           if (currentInitialization !== initializationId) return false;
 
+          queryClient.setQueryData(profileQueryKeys.favorites, serverProducts);
           set({
             productIds: favoriteIds(serverProducts),
             guestProductIds: [],
@@ -150,6 +153,14 @@ export const useFavoritesStore = create<FavoritesStore>()(
           }
           if (favoriteSession !== initializationId) return false;
 
+          void Promise.all([
+            queryClient.invalidateQueries({
+              queryKey: profileQueryKeys.favorites,
+            }),
+            queryClient.invalidateQueries({
+              queryKey: profileQueryKeys.dashboard,
+            }),
+          ]);
           set((state) => ({
             pendingProductIds: removeProductId(
               state.pendingProductIds,
@@ -160,6 +171,14 @@ export const useFavoritesStore = create<FavoritesStore>()(
         } catch {
           if (favoriteSession !== initializationId) return false;
 
+          void Promise.all([
+            queryClient.invalidateQueries({
+              queryKey: profileQueryKeys.favorites,
+            }),
+            queryClient.invalidateQueries({
+              queryKey: profileQueryKeys.dashboard,
+            }),
+          ]);
           set((state) => ({
             productIds: wasFavorite
               ? addProductId(state.productIds, productId)

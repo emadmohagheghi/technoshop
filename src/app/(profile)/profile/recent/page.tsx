@@ -25,9 +25,14 @@ export default function RecentProductsPage() {
   const removeRecent = useMutation({
     mutationFn: removeRecentProduct,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: profileQueryKeys.recent,
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: profileQueryKeys.recent,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: profileQueryKeys.dashboard,
+        }),
+      ]);
       toast.success("محصول از بازدیدهای اخیر حذف شد");
     },
     onError: () => toast.error("حذف محصول ناموفق بود"),
@@ -35,9 +40,14 @@ export default function RecentProductsPage() {
   const clearRecent = useMutation({
     mutationFn: clearRecentProducts,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: profileQueryKeys.recent,
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: profileQueryKeys.recent,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: profileQueryKeys.dashboard,
+        }),
+      ]);
       toast.success("بازدیدهای اخیر پاک شدند");
     },
     onError: () => toast.error("پاک کردن بازدیدهای اخیر ناموفق بود"),

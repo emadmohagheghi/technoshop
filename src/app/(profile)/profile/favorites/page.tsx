@@ -27,9 +27,14 @@ export default function FavoritesPage() {
     mutationFn: clearFavoriteProducts,
     onSuccess: async () => {
       await initializeFavorites(true);
-      await queryClient.invalidateQueries({
-        queryKey: profileQueryKeys.favorites,
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: profileQueryKeys.favorites,
+        }),
+        queryClient.invalidateQueries({
+          queryKey: profileQueryKeys.dashboard,
+        }),
+      ]);
       toast.success("علاقه‌مندی‌ها پاک شدند");
     },
     onError: () => toast.error("پاک کردن علاقه‌مندی‌ها ناموفق بود"),

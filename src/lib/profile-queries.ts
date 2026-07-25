@@ -1,6 +1,7 @@
 import { getAddresses } from "@/services/addresses-service";
 import { getFavoriteProducts } from "@/services/favorites-service";
 import { getProfileOrder, getProfileOrders } from "@/services/orders-service";
+import { getProfileDashboard } from "@/services/profile-service";
 import { getRecentProducts } from "@/services/recent-products-service";
 import { queryOptions, type QueryClient } from "@tanstack/react-query";
 
@@ -10,12 +11,21 @@ const ADDRESSES_STALE_TIME = 1000 * 60 * 10;
 
 export const profileQueryKeys = {
   all: ["profile"] as const,
+  dashboard: ["profile", "dashboard"] as const,
   orders: ["profile", "orders"] as const,
   order: (slug: string) => ["profile", "orders", slug] as const,
   favorites: ["profile", "favorites"] as const,
   recent: ["profile", "recent"] as const,
   addresses: ["profile", "addresses"] as const,
 };
+
+export const profileDashboardQueryOptions = () =>
+  queryOptions({
+    queryKey: profileQueryKeys.dashboard,
+    queryFn: getProfileDashboard,
+    staleTime: PROFILE_STALE_TIME,
+    gcTime: PROFILE_GC_TIME,
+  });
 
 export const profileOrdersQueryOptions = () =>
   queryOptions({
@@ -63,11 +73,7 @@ export function prefetchProfileRouteData(
 ) {
   switch (href) {
     case "/profile":
-      return Promise.all([
-        queryClient.prefetchQuery(profileOrdersQueryOptions()),
-        queryClient.prefetchQuery(profileFavoritesQueryOptions()),
-        queryClient.prefetchQuery(profileRecentQueryOptions()),
-      ]);
+      return queryClient.prefetchQuery(profileDashboardQueryOptions());
     case "/profile/orders":
       return queryClient.prefetchQuery(profileOrdersQueryOptions());
     case "/profile/favorites":

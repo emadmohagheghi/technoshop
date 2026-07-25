@@ -3,12 +3,8 @@
 import { Button } from "@/app/_components/ui/button";
 import ProductCard from "@/app/_components/ui/product-card";
 import ProductCardSkeleton from "@/app/_components/ui/product-card-skeleton";
-import {
-  profileFavoritesQueryOptions,
-  profileOrdersQueryOptions,
-  profileRecentQueryOptions,
-} from "@/lib/profile-queries";
-import { getFavoriteProducts } from "@/services/favorites-service";
+import { profileDashboardQueryOptions } from "@/lib/profile-queries";
+import type { Product } from "@/types/product.types";
 import { useUserStore } from "@/stores/user.store";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -53,9 +49,7 @@ const quickActions = [
 
 export default function ProfilePage() {
   const user = useUserStore((state) => state.user);
-  const ordersQuery = useQuery(profileOrdersQueryOptions());
-  const favoritesQuery = useQuery(profileFavoritesQueryOptions());
-  const recentQuery = useQuery(profileRecentQueryOptions());
+  const dashboardQuery = useQuery(profileDashboardQueryOptions());
   const completedFields = [
     user?.first_name,
     user?.last_name,
@@ -64,8 +58,8 @@ export default function ProfilePage() {
     user?.email,
   ].filter(Boolean).length;
   const completion = Math.round((completedFields / 5) * 100);
-  const orders = ordersQuery.data;
-  const latestOrder = orders?.current_orders[0] ?? orders?.all_orders[0];
+  const orders = dashboardQuery.data?.orders;
+  const latestOrder = orders?.latest_order;
 
   return (
     <div className="space-y-5">
@@ -114,13 +108,13 @@ export default function ProfilePage() {
             </Button>
           }
         />
-        {ordersQuery.isLoading ? (
+        {dashboardQuery.isLoading ? (
           <div className="mt-5">
             <ProfileLoading cards={1} />
           </div>
-        ) : ordersQuery.isError ? (
+        ) : dashboardQuery.isError ? (
           <div className="mt-5">
-            <ProfileError onRetry={() => void ordersQuery.refetch()} />
+            <ProfileError onRetry={() => void dashboardQuery.refetch()} />
           </div>
         ) : (
           <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -173,14 +167,14 @@ export default function ProfilePage() {
       <ProductPreview
         title="علاقه‌مندی‌های شما"
         href="/profile/favorites"
-        products={favoritesQuery.data}
-        loading={favoritesQuery.isLoading}
+        products={dashboardQuery.data?.favorite_products}
+        loading={dashboardQuery.isLoading}
       />
       <ProductPreview
         title="بازدیدهای اخیر"
         href="/profile/recent"
-        products={recentQuery.data}
-        loading={recentQuery.isLoading}
+        products={dashboardQuery.data?.recent_products}
+        loading={dashboardQuery.isLoading}
       />
     </div>
   );
@@ -194,7 +188,7 @@ function ProductPreview({
 }: {
   title: string;
   href: string;
-  products?: Awaited<ReturnType<typeof getFavoriteProducts>>;
+  products?: Product[];
   loading: boolean;
 }) {
   if (!loading && (!products || products.length === 0)) return null;

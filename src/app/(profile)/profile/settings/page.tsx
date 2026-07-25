@@ -4,6 +4,7 @@ import { Button } from "@/app/_components/ui/button";
 import { Input } from "@/app/_components/ui/input";
 import { Label } from "@/app/_components/ui/label";
 import { ToggleTheme } from "@/app/_components/ui/theme-toggle";
+import { profileQueryKeys } from "@/lib/profile-queries";
 import { clearRecentProducts } from "@/services/recent-products-service";
 import { clearSearchHistory, updatePassword } from "@/services/users-service";
 import { useUserStore } from "@/stores/user.store";
@@ -64,7 +65,10 @@ export default function SettingsPage() {
   const clearRecent = useMutation({
     mutationFn: clearRecentProducts,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["profile", "recent"] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: profileQueryKeys.recent }),
+        queryClient.invalidateQueries({ queryKey: profileQueryKeys.dashboard }),
+      ]);
       toast.success("بازدیدهای اخیر پاک شدند");
     },
     onError: () => toast.error("پاک کردن بازدیدهای اخیر ناموفق بود"),

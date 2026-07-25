@@ -1,5 +1,6 @@
 "use client";
 
+import { profileQueryKeys } from "@/lib/profile-queries";
 import { recordRecentProduct } from "@/services/recent-products-service";
 import { useUserStore } from "@/stores/user.store";
 import { useQueryClient } from "@tanstack/react-query";
@@ -28,7 +29,14 @@ export default function RecentProductTracker({
 
     void recordRecentProduct(productId)
       .then(() =>
-        queryClient.invalidateQueries({ queryKey: ["profile", "recent"] }),
+        Promise.all([
+          queryClient.invalidateQueries({
+            queryKey: profileQueryKeys.recent,
+          }),
+          queryClient.invalidateQueries({
+            queryKey: profileQueryKeys.dashboard,
+          }),
+        ]),
       )
       .catch(() => {
         trackedProductId.current = null;

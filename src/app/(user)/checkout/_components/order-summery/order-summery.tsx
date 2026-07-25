@@ -3,6 +3,7 @@
 import { Button } from "@/app/_components/ui/button";
 import { Card, CardContent } from "@/app/_components/ui/card";
 import SpinnerLoading from "@/app/_components/ui/spinner-loading";
+import { profileQueryKeys } from "@/lib/profile-queries";
 import { confirmCheckout } from "@/services/checkout-service";
 import { useCartStore, type CartItem } from "@/stores/cart.store";
 import type { CheckoutState } from "@/types/checkout.types";
@@ -60,7 +61,10 @@ export default function OrderSummary({
     onSuccess: async (confirmation) => {
       await refreshCart();
       queryClient.removeQueries({ queryKey: ["checkout"] });
-      await queryClient.invalidateQueries({ queryKey: ["profile", "orders"] });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: profileQueryKeys.orders }),
+        queryClient.invalidateQueries({ queryKey: profileQueryKeys.dashboard }),
+      ]);
       toast.success("سفارش با موفقیت ثبت شد");
       router.replace(confirmation.redirect_to);
     },
