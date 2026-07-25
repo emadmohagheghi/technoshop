@@ -3,9 +3,12 @@
 import { Button } from "@/app/_components/ui/button";
 import ProductCard from "@/app/_components/ui/product-card";
 import ProductCardSkeleton from "@/app/_components/ui/product-card-skeleton";
+import {
+  profileFavoritesQueryOptions,
+  profileOrdersQueryOptions,
+  profileRecentQueryOptions,
+} from "@/lib/profile-queries";
 import { getFavoriteProducts } from "@/services/favorites-service";
-import { getProfileOrders } from "@/services/orders-service";
-import { getRecentProducts } from "@/services/recent-products-service";
 import { useUserStore } from "@/stores/user.store";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -50,18 +53,9 @@ const quickActions = [
 
 export default function ProfilePage() {
   const user = useUserStore((state) => state.user);
-  const ordersQuery = useQuery({
-    queryKey: ["profile", "orders"],
-    queryFn: getProfileOrders,
-  });
-  const favoritesQuery = useQuery({
-    queryKey: ["profile", "favorites"],
-    queryFn: getFavoriteProducts,
-  });
-  const recentQuery = useQuery({
-    queryKey: ["profile", "recent"],
-    queryFn: getRecentProducts,
-  });
+  const ordersQuery = useQuery(profileOrdersQueryOptions());
+  const favoritesQuery = useQuery(profileFavoritesQueryOptions());
+  const recentQuery = useQuery(profileRecentQueryOptions());
   const completedFields = [
     user?.first_name,
     user?.last_name,

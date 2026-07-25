@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/app/_components/ui/button";
-import { getProfileOrder } from "@/services/orders-service";
+import { profileOrderQueryOptions } from "@/lib/profile-queries";
 import { useCartStore } from "@/stores/cart.store";
 import { imageUrl } from "@/utils/product";
 import { formatProfileDate, formatProfilePrice } from "@/utils/profile";
@@ -33,8 +33,7 @@ export default function OrderDetailPage() {
   const setQuantity = useCartStore((state) => state.setQuantity);
   const getQuantity = useCartStore((state) => state.getQuantity);
   const orderQuery = useQuery({
-    queryKey: ["profile", "orders", params.slug],
-    queryFn: () => getProfileOrder(params.slug),
+    ...profileOrderQueryOptions(params.slug),
     enabled: Boolean(params.slug),
   });
   const reorder = useMutation({

@@ -4,10 +4,10 @@ import AddressCard from "@/app/_components/address/address-card";
 import AddressFormDialog from "@/app/_components/address/address-form-dialog";
 import { Button } from "@/app/_components/ui/button";
 import {
-  deleteAddress,
-  getAddresses,
-  setDefaultAddress,
-} from "@/services/addresses-service";
+  profileAddressesQueryOptions,
+  profileQueryKeys,
+} from "@/lib/profile-queries";
+import { deleteAddress, setDefaultAddress } from "@/services/addresses-service";
 import type { UserAddress } from "@/types/address.types";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Add, Edit2, Location, Star1, Trash } from "iconsax-reactjs";
@@ -27,14 +27,11 @@ export default function AddressesPage() {
   const [editingAddress, setEditingAddress] = useState<UserAddress | null>(
     null,
   );
-  const addressesQuery = useQuery({
-    queryKey: ["profile", "addresses"],
-    queryFn: getAddresses,
-  });
+  const addressesQuery = useQuery(profileAddressesQueryOptions());
 
   const refreshAddresses = async () => {
     await Promise.all([
-      queryClient.invalidateQueries({ queryKey: ["profile", "addresses"] }),
+      queryClient.invalidateQueries({ queryKey: profileQueryKeys.addresses }),
       queryClient.invalidateQueries({ queryKey: ["checkout"] }),
     ]);
   };

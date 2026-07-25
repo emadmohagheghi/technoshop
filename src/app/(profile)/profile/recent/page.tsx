@@ -4,8 +4,11 @@ import { Button } from "@/app/_components/ui/button";
 import ProductCard from "@/app/_components/ui/product-card";
 import ProductCardSkeleton from "@/app/_components/ui/product-card-skeleton";
 import {
+  profileQueryKeys,
+  profileRecentQueryOptions,
+} from "@/lib/profile-queries";
+import {
   clearRecentProducts,
-  getRecentProducts,
   removeRecentProduct,
 } from "@/services/recent-products-service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -18,14 +21,13 @@ import { ProfileEmpty, ProfileError } from "../_components/profile-states";
 
 export default function RecentProductsPage() {
   const queryClient = useQueryClient();
-  const recentQuery = useQuery({
-    queryKey: ["profile", "recent"],
-    queryFn: getRecentProducts,
-  });
+  const recentQuery = useQuery(profileRecentQueryOptions());
   const removeRecent = useMutation({
     mutationFn: removeRecentProduct,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["profile", "recent"] });
+      await queryClient.invalidateQueries({
+        queryKey: profileQueryKeys.recent,
+      });
       toast.success("محصول از بازدیدهای اخیر حذف شد");
     },
     onError: () => toast.error("حذف محصول ناموفق بود"),
@@ -33,7 +35,9 @@ export default function RecentProductsPage() {
   const clearRecent = useMutation({
     mutationFn: clearRecentProducts,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["profile", "recent"] });
+      await queryClient.invalidateQueries({
+        queryKey: profileQueryKeys.recent,
+      });
       toast.success("بازدیدهای اخیر پاک شدند");
     },
     onError: () => toast.error("پاک کردن بازدیدهای اخیر ناموفق بود"),

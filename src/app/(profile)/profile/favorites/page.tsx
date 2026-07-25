@@ -4,9 +4,10 @@ import { Button } from "@/app/_components/ui/button";
 import ProductCard from "@/app/_components/ui/product-card";
 import ProductCardSkeleton from "@/app/_components/ui/product-card-skeleton";
 import {
-  clearFavoriteProducts,
-  getFavoriteProducts,
-} from "@/services/favorites-service";
+  profileFavoritesQueryOptions,
+  profileQueryKeys,
+} from "@/lib/profile-queries";
+import { clearFavoriteProducts } from "@/services/favorites-service";
 import { useFavoritesStore } from "@/stores/favorites.store";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Heart, Trash } from "iconsax-reactjs";
@@ -21,16 +22,13 @@ export default function FavoritesPage() {
   const favoriteIds = useFavoritesStore((state) => state.productIds);
   const favoritesStatus = useFavoritesStore((state) => state.status);
   const initializeFavorites = useFavoritesStore((state) => state.initialize);
-  const favoritesQuery = useQuery({
-    queryKey: ["profile", "favorites"],
-    queryFn: getFavoriteProducts,
-  });
+  const favoritesQuery = useQuery(profileFavoritesQueryOptions());
   const clearFavorites = useMutation({
     mutationFn: clearFavoriteProducts,
     onSuccess: async () => {
       await initializeFavorites(true);
       await queryClient.invalidateQueries({
-        queryKey: ["profile", "favorites"],
+        queryKey: profileQueryKeys.favorites,
       });
       toast.success("علاقه‌مندی‌ها پاک شدند");
     },

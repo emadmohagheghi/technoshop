@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/app/_components/ui/button";
-import { getProfileOrders } from "@/services/orders-service";
+import { profileOrdersQueryOptions } from "@/lib/profile-queries";
 import { OrderSummary } from "@/types/order.types";
 import { useQuery } from "@tanstack/react-query";
 import { Bag2 } from "iconsax-reactjs";
@@ -20,10 +20,7 @@ type OrderTab = "all" | "current" | "delivered" | "canceled";
 
 export default function OrdersPage() {
   const [activeTab, setActiveTab] = useState<OrderTab>("all");
-  const ordersQuery = useQuery({
-    queryKey: ["profile", "orders"],
-    queryFn: getProfileOrders,
-  });
+  const ordersQuery = useQuery(profileOrdersQueryOptions());
   const data = ordersQuery.data;
   const tabOrders: Record<OrderTab, OrderSummary[]> = {
     all: data?.all_orders ?? [],
