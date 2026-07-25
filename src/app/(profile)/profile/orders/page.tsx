@@ -2,11 +2,11 @@
 
 import { Button } from "@/app/_components/ui/button";
 import { profileOrdersQueryOptions } from "@/lib/profile-queries";
-import { OrderSummary } from "@/types/order.types";
-import { useQuery } from "@tanstack/react-query";
+import type { ProfileOrderStatus } from "@/types/order.types";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Bag2 } from "iconsax-reactjs";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import OrderCard from "../_components/order-card";
 import ProfilePageHeader from "../_components/profile-page-header";
 import {
@@ -16,18 +16,34 @@ import {
 } from "../_components/profile-states";
 import { cn } from "@/lib/utils";
 
-type OrderTab = "all" | "current" | "delivered" | "canceled";
+type OrderTab = Exclude<ProfileOrderStatus, "pending_payment">;
 
 export default function OrdersPage() {
   const [activeTab, setActiveTab] = useState<OrderTab>("all");
-  const ordersQuery = useQuery(profileOrdersQueryOptions());
+  const [page, setPage] = useState(1);
+  const queryClient = useQueryClient();
+  const ordersQuery = useQuery(profileOrdersQueryOptions(activeTab, page));
   const data = ordersQuery.data;
-  const tabOrders: Record<OrderTab, OrderSummary[]> = {
-    all: data?.all_orders ?? [],
-    current: data?.current_orders ?? [],
-    delivered: data?.delivered_orders ?? [],
-    canceled: data?.canceled_orders ?? [],
-  };
+  const orders = data?.data ?? [];
+
+  useEffect(() => {
+    if (
+      !ordersQuery.isPlaceholderData &&
+      data?.status === activeTab &&
+      data.has_next
+    ) {
+      void queryClient.prefetchQuery(
+        profileOrdersQueryOptions(activeTab, page + 1),
+      );
+    }
+  }, [
+    activeTab,
+    data?.has_next,
+    data?.status,
+    ordersQuery.isPlaceholderData,
+    page,
+    queryClient,
+  ]);
   const tabs: { id: OrderTab; label: string; count: number }[] = [
     { id: "all", label: "همه", count: data?.counts.all ?? 0 },
     {
@@ -64,7 +80,10 @@ export default function OrdersPage() {
                 activeTab === tab.id &&
                   "bg-brand-primary hover:bg-brand-primary-focus",
               )}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                setActiveTab(tab.id);
+                setPage(1);
+              }}
             >
               {tab.label}
               <span
@@ -84,7 +103,7 @@ export default function OrdersPage() {
         <ProfileLoading />
       ) : ordersQuery.isError ? (
         <ProfileError onRetry={() => void ordersQuery.refetch()} />
-      ) : tabOrders[activeTab].length === 0 ? (
+      ) : orders.length === 0 ? (
         <ProfileEmpty
           title="سفارشی در این بخش نیست"
           description="پس از ثبت خرید، وضعیت سفارش شما در همین صفحه قابل پیگیری است."
@@ -96,10 +115,37 @@ export default function OrdersPage() {
           }
         />
       ) : (
-        <div className="space-y-4">
-          {tabOrders[activeTab].map((order) => (
+        <div
+          className={cn(
+            "space-y-4 transition-opacity",
+            ordersQuery.isPlaceholderData && "pointer-events-none opacity-60",
+          )}
+        >
+          {orders.map((order) => (
             <OrderCard key={order.id} order={order} />
           ))}
+          {data && data.page_count > 1 && (
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <Button
+                variant="outline"
+                disabled={!data.has_previous || ordersQuery.isPlaceholderData}
+                onClick={() => setPage((current) => Math.max(current - 1, 1))}
+              >
+                صفحه قبل
+              </Button>
+              <span className="text-sm text-gray-600">
+                صفحه {data.current_page.toLocaleString("fa-IR")} از{" "}
+                {data.page_count.toLocaleString("fa-IR")}
+              </span>
+              <Button
+                variant="outline"
+                disabled={!data.has_next || ordersQuery.isPlaceholderData}
+                onClick={() => setPage((current) => current + 1)}
+              >
+                صفحه بعد
+              </Button>
+            </div>
+          )}
         </div>
       )}
     </div>

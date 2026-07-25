@@ -3,7 +3,12 @@ import { getFavoriteProducts } from "@/services/favorites-service";
 import { getProfileOrder, getProfileOrders } from "@/services/orders-service";
 import { getProfileDashboard } from "@/services/profile-service";
 import { getRecentProducts } from "@/services/recent-products-service";
-import { queryOptions, type QueryClient } from "@tanstack/react-query";
+import type { ProfileOrderStatus } from "@/types/order.types";
+import {
+  keepPreviousData,
+  queryOptions,
+  type QueryClient,
+} from "@tanstack/react-query";
 
 const PROFILE_GC_TIME = 1000 * 60 * 30;
 const PROFILE_STALE_TIME = 1000 * 60 * 5;
@@ -13,6 +18,8 @@ export const profileQueryKeys = {
   all: ["profile"] as const,
   dashboard: ["profile", "dashboard"] as const,
   orders: ["profile", "orders"] as const,
+  orderList: (status: ProfileOrderStatus, page: number, take: number) =>
+    ["profile", "orders", "list", status, page, take] as const,
   order: (slug: string) => ["profile", "orders", slug] as const,
   favorites: ["profile", "favorites"] as const,
   recent: ["profile", "recent"] as const,
@@ -27,10 +34,15 @@ export const profileDashboardQueryOptions = () =>
     gcTime: PROFILE_GC_TIME,
   });
 
-export const profileOrdersQueryOptions = () =>
+export const profileOrdersQueryOptions = (
+  status: ProfileOrderStatus = "all",
+  page = 1,
+  take = 10,
+) =>
   queryOptions({
-    queryKey: profileQueryKeys.orders,
-    queryFn: getProfileOrders,
+    queryKey: profileQueryKeys.orderList(status, page, take),
+    queryFn: () => getProfileOrders({ status, page, take }),
+    placeholderData: keepPreviousData,
     staleTime: PROFILE_STALE_TIME,
     gcTime: PROFILE_GC_TIME,
   });

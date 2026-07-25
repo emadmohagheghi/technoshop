@@ -33,13 +33,25 @@ export type OrderCounts = {
   canceled: number;
 };
 
+export type ProfileOrderStatus =
+  | "all"
+  | "pending_payment"
+  | "current"
+  | "delivered"
+  | "canceled";
+
 export type OrdersProfileData = {
-  all_orders: OrderSummary[];
-  pending_payment_orders: OrderSummary[];
-  current_orders: OrderSummary[];
-  delivered_orders: OrderSummary[];
-  canceled_orders: OrderSummary[];
+  data: OrderSummary[];
+  status: ProfileOrderStatus;
   counts: OrderCounts;
+  entity_count: number;
+  current_page: number;
+  page_count: number;
+  start_page: number;
+  end_page: number;
+  take: number;
+  has_next: boolean;
+  has_previous: boolean;
 };
 
 export type OrderProduct = {
