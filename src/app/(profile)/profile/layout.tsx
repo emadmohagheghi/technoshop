@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/app/_components/ui/button";
+import ProfileQueryActivity from "./_components/profile-query-activity";
 import { prefetchProfileRouteData } from "@/lib/profile-queries";
 import { cn } from "@/lib/utils";
 import { useUserStore } from "@/stores/user.store";
@@ -150,7 +151,10 @@ export default function ProfileLayout({
             </div>
           </aside>
 
-          <div className="min-w-0 flex-1 pb-20 lg:pb-0">{children}</div>
+          <div className="min-w-0 flex-1 pb-20 lg:pb-0">
+            <ProfileQueryActivity />
+            {children}
+          </div>
         </div>
       </div>
     </div>
