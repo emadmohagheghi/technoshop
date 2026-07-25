@@ -1,46 +1,58 @@
 "use client";
 
-import { useCartStore } from "@/stores/cart.store";
-import { useQuery } from "@tanstack/react-query";
+import { getCheckout } from "@/services/checkout-service";
 import { getProductByShortSlug } from "@/services/products-service";
+import { useCartStore } from "@/stores/cart.store";
+import { useUserStore } from "@/stores/user.store";
+import { useQuery } from "@tanstack/react-query";
 import OrderSummary from "./order-summery";
 
 export default function OrderSummaryWrapper() {
   const cart = useCartStore((state) => state.cart);
   const cartStatus = useCartStore((state) => state.status);
-
-  // Extract short_slugs from cart items for fetching products
+  const authStatus = useUserStore((state) => state.status);
   const cartItemSlugs = cart.map((item) => item.short_slug);
-
-  // Fetch all products for items in cart
-  const { data: products = [], isLoading } = useQuery({
+  const checkoutQuery = useQuery({
+    queryKey: ["checkout"],
+    queryFn: getCheckout,
+    enabled: authStatus === "authenticated" && cartStatus === "ready",
+  });
+  const productsQuery = useQuery({
     queryKey: ["cart-products", cartItemSlugs],
-    queryFn: async () => {
-      if (cartItemSlugs.length === 0) return [];
-
-      const productPromises = cartItemSlugs.map((slug) =>
-        getProductByShortSlug(slug),
-      );
-      const products = await Promise.all(productPromises);
-      return products;
-    },
-    enabled: cartItemSlugs.length > 0,
+    queryFn: async () =>
+      Promise.all(cartItemSlugs.map((slug) => getProductByShortSlug(slug))),
+    enabled:
+      authStatus === "unauthenticated" &&
+      cartStatus === "ready" &&
+      cartItemSlugs.length > 0,
   });
 
-  if (cartStatus !== "ready" || (isLoading && cartItemSlugs.length > 0)) {
+  const isLoading =
+    cartStatus !== "ready" ||
+    authStatus === "loading" ||
+    (authStatus === "authenticated" && checkoutQuery.isLoading) ||
+    (authStatus === "unauthenticated" && productsQuery.isLoading);
+
+  if (isLoading) {
     return (
-      <div className="lg:col-span-1">
-        <div className="animate-pulse rounded-lg bg-gray-200 p-6">
-          <div className="mb-4 h-6 animate-pulse rounded bg-gray-300"></div>
-          <div className="space-y-3">
-            <div className="h-4 animate-pulse rounded bg-gray-300"></div>
-            <div className="h-4 animate-pulse rounded bg-gray-300"></div>
-            <div className="h-4 animate-pulse rounded bg-gray-300"></div>
-          </div>
+      <div className="animate-pulse rounded-lg bg-gray-100 p-6">
+        <div className="mb-4 h-6 rounded bg-gray-200" />
+        <div className="space-y-3">
+          <div className="h-4 rounded bg-gray-200" />
+          <div className="h-4 rounded bg-gray-200" />
+          <div className="h-10 rounded bg-gray-200" />
         </div>
       </div>
     );
   }
 
-  return <OrderSummary cart={cart} products={products} />;
+  return (
+    <OrderSummary
+      cart={cart}
+      products={productsQuery.data ?? []}
+      checkout={checkoutQuery.data}
+      checkoutError={checkoutQuery.isError}
+      authStatus={authStatus}
+    />
+  );
 }

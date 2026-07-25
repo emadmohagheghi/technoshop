@@ -24,6 +24,12 @@ import { useAuth } from "@/stores/user.store";
 const LOGIN_SESSION_ERROR =
   "\u0646\u0634\u0633\u062a \u0648\u0631\u0648\u062f \u062a\u0623\u06cc\u06cc\u062f \u0646\u0634\u062f. \u062f\u0648\u0628\u0627\u0631\u0647 \u062a\u0644\u0627\u0634 \u06a9\u0646\u06cc\u062f.";
 
+function getLoginRedirectPath() {
+  if (typeof window === "undefined") return "/";
+  const next = new URLSearchParams(window.location.search).get("next");
+  return next && next.startsWith("/") && !next.startsWith("//") ? next : "/";
+}
+
 type Steps = "CHECK" | "PASSWORD" | "OTP";
 
 export default function LoginPage() {
@@ -209,7 +215,7 @@ function StepPassword({ username, router, updateSession }: StepsProps) {
         }
 
         toast.success("ورود موفق");
-        router.replace("/");
+        router.replace(getLoginRedirectPath());
       } else {
         toast.error("رمز عبور اشتباه است");
       }
@@ -276,7 +282,7 @@ function StepOTP({ username, router, updateSession }: StepsProps) {
           }
 
           toast.success("ورود موفق");
-          router.replace("/");
+          router.replace(getLoginRedirectPath());
         } else {
           setOtp("");
           toast.error("کد تایید اشتباه است");

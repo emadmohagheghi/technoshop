@@ -4,19 +4,28 @@ import { middlewareAuth } from "@/utils/middelware-auth";
 export async function middleware(req: NextRequest) {
   const url = req.url;
   const pathname = req.nextUrl.pathname;
+  const isProtectedCheckout =
+    pathname.startsWith("/checkout/shipping") ||
+    pathname.startsWith("/checkout/payment");
+  const nextParam = req.nextUrl.searchParams.get("next");
+  const safeNext =
+    nextParam?.startsWith("/") && !nextParam.startsWith("//")
+      ? nextParam
+      : null;
 
-  // Protected profile routes
-  if (pathname.startsWith("/profile")) {
+  if (pathname.startsWith("/profile") || isProtectedCheckout) {
     const user = await middlewareAuth(req);
     if (!user) {
-      return NextResponse.redirect(new URL("/auth/login", url));
+      const loginUrl = new URL("/auth/login", url);
+      loginUrl.searchParams.set("next", `${pathname}${req.nextUrl.search}`);
+      return NextResponse.redirect(loginUrl);
     }
   }
 
   if (pathname.startsWith("/auth")) {
     const user = await middlewareAuth(req);
     if (user) {
-      return NextResponse.redirect(new URL("/profile", url));
+      return NextResponse.redirect(new URL(safeNext ?? "/profile", url));
     }
   }
 
@@ -24,5 +33,10 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/profile/:path*", "/auth/:path*"],
+  matcher: [
+    "/profile/:path*",
+    "/auth/:path*",
+    "/checkout/shipping/:path*",
+    "/checkout/payment/:path*",
+  ],
 };

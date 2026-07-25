@@ -88,6 +88,20 @@ async function updateData<TModel, TResult>(
   return await apiBase<TResult>(url, options);
 }
 
+async function patchData<TModel, TResult>(
+  url: string,
+  data: TModel,
+  headers?: AxiosRequestHeaders,
+): Promise<ApiResponseType<TResult>> {
+  const options: AxiosRequestConfig = {
+    method: "PATCH",
+    headers: headers,
+    data: JSON.stringify(data),
+  };
+
+  return await apiBase<TResult>(url, options);
+}
+
 async function deleteData<TResult = void>(
   url: string,
   data?: unknown,
@@ -105,12 +119,10 @@ async function deleteData<TResult = void>(
 // Logout function - فقط Cookie authentication
 async function logoutUser(): Promise<void> {
   try {
-    // فقط logout endpoint را صدا می‌زنیم، backend خودش cookie را حذف می‌کند
-    await httpService.post("/api/auth/admin/logout/");
+    await httpService.post("/api/users/logout/");
   } catch (error) {
     console.warn("Logout request failed:", error);
   }
-  // دیگر نیازی به localStorage نیست
 }
 
-export { createData, readData, updateData, deleteData, logoutUser };
+export { createData, readData, updateData, patchData, deleteData, logoutUser };

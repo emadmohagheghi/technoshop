@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { Check, ShoppingCart, Truck, CreditCard } from "lucide-react";
+import { Check, ClipboardCheck, ShoppingCart, Truck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const steps = [
@@ -21,10 +21,10 @@ const steps = [
   },
   {
     id: "payment",
-    name: "پرداخت",
-    description: "تکمیل خرید",
+    name: "ثبت سفارش",
+    description: "مرور و تأیید نهایی",
     path: "/checkout/payment",
-    icon: CreditCard,
+    icon: ClipboardCheck,
   },
 ];
 
@@ -39,7 +39,7 @@ export default function Steps() {
   const currentStepIndex = getCurrentStepIndex();
 
   return (
-    <div className="w-full py-8 max-w-5xl mx-auto">
+    <div className="mx-auto w-full max-w-5xl py-8">
       <div className="relative">
         {/* Background Progress Bar */}
         <div className="bg-muted/50 absolute top-8 right-0 left-0 mx-8 h-2 rounded-full shadow-inner">

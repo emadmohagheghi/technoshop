@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 
 export default function SpinnerLoading({ className }: { className?: string }) {
   return (
-    <div role="status">
+    <span role="status" className="inline-flex">
       <svg
         aria-hidden="true"
         className={cn(
@@ -23,6 +23,6 @@ export default function SpinnerLoading({ className }: { className?: string }) {
         />
       </svg>
       <span className="sr-only">Loading...</span>
-    </div>
+    </span>
   );
 }
