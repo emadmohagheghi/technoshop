@@ -18,6 +18,7 @@ import {
   InputOTPSlot,
 } from "@/app/_components/ui/input-otp";
 import { Label } from "@/app/_components/ui/label";
+import { getApiErrorMessage } from "@/core/http-error-message";
 import { createData } from "@/core/http-service";
 import { validateUsername } from "@/lib/validators";
 
@@ -43,14 +44,6 @@ function formatCountdown(seconds: number) {
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-}
-
-function getErrorMessage(error: unknown, fallback: string) {
-  if (typeof error !== "object" || error === null) return fallback;
-  const value = error as { message?: unknown; detail?: unknown };
-  if (typeof value.message === "string" && value.message) return value.message;
-  if (typeof value.detail === "string" && value.detail) return value.detail;
-  return fallback;
 }
 
 function isStrongPassword(password: string) {
@@ -116,7 +109,7 @@ export default function ForgotPasswordPage() {
           : response.message || "کد بازیابی ارسال شد",
       );
     } catch (error) {
-      toast.error(getErrorMessage(error, "ارسال کد بازیابی ممکن نشد"));
+      toast.error(getApiErrorMessage(error, "ارسال کد بازیابی ممکن نشد"));
     } finally {
       setIsLoading(false);
     }
@@ -143,7 +136,7 @@ export default function ForgotPasswordPage() {
       setStep("PASSWORD");
     } catch (error) {
       setOtp("");
-      toast.error(getErrorMessage(error, "کد بازیابی اشتباه یا منقضی شده است"));
+      toast.error(getApiErrorMessage(error, "کد بازیابی اشتباه یا منقضی شده است"));
     } finally {
       setIsLoading(false);
     }
@@ -182,7 +175,7 @@ export default function ForgotPasswordPage() {
       toast.success(response.message || "رمز عبور جدید ثبت شد");
     } catch (error) {
       toast.error(
-        getErrorMessage(
+        getApiErrorMessage(
           error,
           "لینک بازیابی منقضی شده است؛ فرایند را دوباره انجام دهید",
         ),

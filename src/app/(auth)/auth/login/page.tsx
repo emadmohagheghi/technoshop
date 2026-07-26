@@ -19,6 +19,7 @@ import {
   InputOTPSlot,
 } from "@/app/_components/ui/input-otp";
 import { Label } from "@/app/_components/ui/label";
+import { getApiErrorMessage } from "@/core/http-error-message";
 import { createData } from "@/core/http-service";
 import { validateUsername } from "@/lib/validators";
 import { useAuth } from "@/stores/user.store";
@@ -193,6 +194,7 @@ function StepCheck({
       setStep(response.data.section);
     } catch (error) {
       console.error("Login check failed:", error);
+      toast.error(getApiErrorMessage(error, "امکان ادامه فرایند ورود وجود ندارد"));
     } finally {
       setIsLoading(false);
     }
@@ -264,6 +266,7 @@ function StepPassword({
       router.replace(getLoginRedirectPath());
     } catch (error) {
       console.error("Password login failed:", error);
+      toast.error(getApiErrorMessage(error, "رمز عبور اشتباه است"));
     } finally {
       setIsLoading(false);
     }
@@ -363,6 +366,7 @@ function StepOTP({
     } catch (error) {
       console.error("OTP login failed:", error);
       setOtp("");
+      toast.error(getApiErrorMessage(error, "کد تأیید اشتباه است"));
     } finally {
       setIsLoading(false);
     }
@@ -389,6 +393,7 @@ function StepOTP({
       toast.success("کد تأیید دوباره ارسال شد");
     } catch (error) {
       console.error("OTP resend failed:", error);
+      toast.error(getApiErrorMessage(error, "ارسال مجدد کد ممکن نشد"));
     } finally {
       setIsResending(false);
     }

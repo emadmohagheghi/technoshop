@@ -23,6 +23,12 @@ export const notFoundErrorStrategy: ApiErrorHandler = (errorData) => {
   throw { ...errorData, detail: "سرویس مورد نظر یافت نشد" } as NotFoundError;
 };
 
+export const tooManyRequestsErrorStrategy: ApiErrorHandler = (errorData) => {
+  throw {
+    ...errorData,
+    detail: "تعداد تلاش‌ها بیش از حد مجاز است؛ لطفاً کمی بعد دوباره تلاش کنید",
+  } as UnhandledException;
+};
 
 export const unhandledExceptionStrategy: ApiErrorHandler = (errorData) => {
   throw { ...errorData, detail: "خطای سرور" } as UnhandledException;
@@ -38,6 +44,7 @@ export const errorHandler: Record<number, ApiErrorHandler> = {
       errorData,
     ),
   404: notFoundErrorStrategy, // یافت نشد
+  429: tooManyRequestsErrorStrategy, // درخواست بیش از حد مجاز
   500: unhandledExceptionStrategy, // خطای سرور
   502: unhandledExceptionStrategy, // Bad Gateway
   503: unhandledExceptionStrategy, // Service Unavailable
