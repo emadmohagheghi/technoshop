@@ -15,6 +15,22 @@ import SpinnerLoading from "../ui/spinner-loading";
 import { usePathname } from "next/navigation";
 import { useCartStore } from "@/stores/cart.store";
 import { Badge } from "@/app/_components/ui/badge";
+import { useHeaderStore } from "@/stores/header-data.store";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/app/_components/ui/dropdown-menu";
+
+const desktopNavItems = [
+  { label: "همه محصولات", href: "/products" },
+  { label: "فروش ویژه", href: "/products?special=true" },
+  { label: "جدیدترین‌ها", href: "/products?sort=1" },
+  { label: "پرفروش‌ترین‌ها", href: "/products?sort=2" },
+];
 
 export default function Navbar() {
   const [isScrollingUp, setIsScrollingUp] = useState(true);
@@ -22,6 +38,7 @@ export default function Navbar() {
   const status = useUserStore((state) => state.status);
   const pathname = usePathname();
   const totalItems = useCartStore((state) => state.getTotalItems());
+  const categories = useHeaderStore((state) => state.categories);
 
   const handleScroll = useCallback(() => {
     if (window.scrollY < lastScrollY) {
@@ -47,15 +64,53 @@ export default function Navbar() {
           !isScrollingUp && "-translate-y-18",
         )}
       >
-        <nav className="mx-auto max-w-[1440px] p-6">
-          <ul className="flex max-w-[625px] items-center justify-between">
-            <li className="flex gap-1">
-              دسته بندی کالا ها <ArrowDown2 size="24" />
+        <nav className="mx-auto max-w-[1440px] px-6 py-5">
+          <ul className="flex items-center gap-8 text-sm font-medium text-gray-700">
+            <li>
+              <DropdownMenu dir="rtl">
+                <DropdownMenuTrigger className="hover:text-brand-primary data-[state=open]:text-brand-primary flex cursor-pointer items-center gap-1 transition-colors outline-none">
+                  دسته‌بندی کالاها
+                  <ArrowDown2 size="18" aria-hidden="true" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  align="start"
+                  className="max-h-96 min-w-64 bg-white p-2"
+                >
+                  <DropdownMenuLabel>دسته‌بندی محصولات</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/products" className="w-full py-2">
+                      همه دسته‌بندی‌ها
+                    </Link>
+                  </DropdownMenuItem>
+                  {categories.map((category) => (
+                    <DropdownMenuItem key={category.id} asChild>
+                      <Link
+                        href={`/products?category=${category.slug}`}
+                        className="w-full py-2"
+                      >
+                        {category.title_ir}
+                      </Link>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </li>
-            <li>تخفیف</li>
-            <li>پیشنهادات</li>
-            <li>خرید اقساطی</li>
-            <li>راهنمای خرید</li>
+            {desktopNavItems.map((item) => (
+              <li key={item.href}>
+                <Link
+                  href={item.href}
+                  className={cn(
+                    "hover:text-brand-primary transition-colors",
+                    pathname === "/products" &&
+                      item.href === "/products" &&
+                      "text-brand-primary",
+                  )}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
       </div>
@@ -87,20 +142,22 @@ export default function Navbar() {
             <li className="">
               <Link
                 className="flex flex-col items-center justify-center"
-                href="/categories"
+                href="/products"
               >
                 <Category
                   size="30"
                   color={
-                    pathname === "/categories" ? "var(--color-primary)" : "gray"
+                    pathname.startsWith("/products")
+                      ? "var(--color-primary)"
+                      : "gray"
                   }
                 />
                 <p
                   className={cn({
-                    "text-brand-primary": pathname === "/categories",
+                    "text-brand-primary": pathname.startsWith("/products"),
                   })}
                 >
-                  دسته بندی
+                  محصولات
                 </p>
               </Link>
             </li>
