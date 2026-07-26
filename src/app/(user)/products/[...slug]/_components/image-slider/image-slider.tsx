@@ -1,17 +1,26 @@
 "use client";
-import { MutableRefObject, useState } from "react";
+
+import { useState } from "react";
+import Image from "next/image";
+import { ArrowLeft2, ArrowRight2 } from "iconsax-reactjs";
 import {
-  useKeenSlider,
-  KeenSliderPlugin,
   KeenSliderInstance,
+  KeenSliderPlugin,
+  useKeenSlider,
 } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
-import Image from "next/image";
+
 import { imageUrl } from "@/utils/product";
-import { ArrowRight2, ArrowLeft2 } from "iconsax-reactjs";
+
+type ProductImage = {
+  id: number;
+  image: {
+    name: string;
+  };
+};
 
 function ThumbnailPlugin(
-  mainRef: MutableRefObject<KeenSliderInstance | null>,
+  mainInstance: KeenSliderInstance,
 ): KeenSliderPlugin {
   return (slider) => {
     function removeActive() {
@@ -19,25 +28,25 @@ function ThumbnailPlugin(
         slide.classList.remove("active");
       });
     }
-    function addActive(idx: number) {
-      slider.slides[idx].classList.add("active");
+
+    function addActive(index: number) {
+      slider.slides[index]?.classList.add("active");
     }
 
     function addClickEvents() {
-      slider.slides.forEach((slide, idx) => {
+      slider.slides.forEach((slide, index) => {
         slide.addEventListener("click", () => {
-          if (mainRef.current) mainRef.current.moveToIdx(idx);
+          mainInstance.moveToIdx(index);
         });
       });
     }
 
     slider.on("created", () => {
-      if (!mainRef.current) return;
       addActive(slider.track.details.rel);
       addClickEvents();
-      mainRef.current.on("animationStarted", (main: KeenSliderInstance) => {
+      mainInstance.on("animationStarted", (main) => {
         removeActive();
-        const next = main.animator.targetIdx || 0;
+        const next = main.animator.targetIdx ?? 0;
         addActive(main.track.absToRel(next));
         slider.moveToIdx(Math.min(slider.track.details.maxIdx, next));
       });
@@ -45,33 +54,13 @@ function ThumbnailPlugin(
   };
 }
 
-export default function ImageSlider({
+function ThumbnailSlider({
   images,
+  mainInstance,
 }: {
-  images: {
-    id: number;
-    image: {
-      name: string;
-    };
-  }[];
+  images: ProductImage[];
+  mainInstance: KeenSliderInstance;
 }) {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [loaded, setLoaded] = useState(false);
-
-  const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
-    initial: 0,
-    slides: {
-      perView: 1,
-      spacing: 10,
-    },
-    rtl: true,
-    created() {
-      setLoaded(true);
-    },
-    slideChanged(slider) {
-      setCurrentSlide(slider.track.details.rel);
-    },
-  });
   const [thumbnailRef] = useKeenSlider<HTMLDivElement>(
     {
       initial: 0,
@@ -81,8 +70,45 @@ export default function ImageSlider({
       },
       rtl: true,
     },
-    [ThumbnailPlugin(instanceRef)],
+    [ThumbnailPlugin(mainInstance)],
   );
+
+  return (
+    <div ref={thumbnailRef} className="keen-slider thumbnail !hidden lg:!flex">
+      {images.map((image) => (
+        <div key={image.id} className="keen-slider__slide rounded-lg border">
+          <Image
+            src={imageUrl(image.image.name)}
+            alt={`Slide ${image.id}`}
+            width={128}
+            height={128}
+            className="w-23.5 cursor-pointer xl:w-30"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export default function ImageSlider({ images }: { images: ProductImage[] }) {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [mainInstance, setMainInstance] =
+    useState<KeenSliderInstance | null>(null);
+
+  const [sliderRef] = useKeenSlider<HTMLDivElement>({
+    initial: 0,
+    slides: {
+      perView: 1,
+      spacing: 10,
+    },
+    rtl: true,
+    created(slider) {
+      setMainInstance(slider);
+    },
+    slideChanged(slider) {
+      setCurrentSlide(slider.track.details.rel);
+    },
+  });
 
   return (
     <div className="flex w-full flex-col gap-y-2 lg:p-2">
@@ -100,20 +126,18 @@ export default function ImageSlider({
             </div>
           ))}
         </div>
-        {/* next and prev btn */}
-        {images.length > 1 && loaded && instanceRef.current && (
+
+        {images.length > 1 && mainInstance && (
           <>
             <button
-              onClick={() => instanceRef.current?.next()}
-              disabled={
-                currentSlide === instanceRef.current.track.details.maxIdx
-              }
+              onClick={() => mainInstance.next()}
+              disabled={currentSlide >= images.length - 1}
               className="absolute top-1/2 left-0 flex size-8 -translate-y-1/2 items-center justify-center rounded-lg bg-gray-300 transition hover:bg-gray-400 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
             >
               <ArrowLeft2 />
             </button>
             <button
-              onClick={() => instanceRef.current?.prev()}
+              onClick={() => mainInstance.prev()}
               disabled={currentSlide === 0}
               className="absolute top-1/2 right-0 flex size-8 -translate-y-1/2 items-center justify-center rounded-lg bg-gray-300 transition hover:bg-gray-400 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-gray-400"
             >
@@ -123,26 +147,8 @@ export default function ImageSlider({
         )}
       </div>
 
-      {images.length > 1 && (
-        <div
-          ref={thumbnailRef}
-          className="keen-slider thumbnail !hidden lg:!flex"
-        >
-          {images.map((image) => (
-            <div
-              key={image.id}
-              className="keen-slider__slide rounded-lg border"
-            >
-              <Image
-                src={imageUrl(image.image.name)}
-                alt={`Slide ${image.id}`}
-                width={128}
-                height={128}
-                className="w-23.5 cursor-pointer xl:w-30"
-              />
-            </div>
-          ))}
-        </div>
+      {images.length > 1 && mainInstance && (
+        <ThumbnailSlider images={images} mainInstance={mainInstance} />
       )}
     </div>
   );

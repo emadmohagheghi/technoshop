@@ -24,8 +24,7 @@ import { createData } from "@/core/http-service";
 import { validateUsername } from "@/lib/validators";
 import { useAuth } from "@/stores/user.store";
 
-const LOGIN_SESSION_ERROR =
-  "نشست ورود تأیید نشد. دوباره تلاش کنید.";
+const LOGIN_SESSION_ERROR = "نشست ورود تأیید نشد. دوباره تلاش کنید.";
 
 type LoginStep = "CHECK" | "PASSWORD" | "OTP";
 
@@ -104,7 +103,9 @@ export default function LoginPage() {
             </Button>
             <div className="flex-1" />
           </div>
-          <CardTitle className="text-2xl font-bold">ورود به حساب کاربری</CardTitle>
+          <CardTitle className="text-2xl font-bold">
+            ورود به حساب کاربری
+          </CardTitle>
           <p className="mt-2 text-sm text-gray-600">
             {step === "CHECK" && "شماره موبایل یا ایمیل خود را وارد کنید"}
             {step === "OTP" && `کد تأیید ارسال‌شده به ${username} را وارد کنید`}
@@ -194,7 +195,9 @@ function StepCheck({
       setStep(response.data.section);
     } catch (error) {
       console.error("Login check failed:", error);
-      toast.error(getApiErrorMessage(error, "امکان ادامه فرایند ورود وجود ندارد"));
+      toast.error(
+        getApiErrorMessage(error, "امکان ادامه فرایند ورود وجود ندارد"),
+      );
     } finally {
       setIsLoading(false);
     }
@@ -293,7 +296,9 @@ function StepPassword({
         {isLoading ? "در حال ورود..." : "ورود"}
       </Button>
       <Button asChild variant="link" className="w-full">
-        <Link href={`/auth/forgot-password?username=${encodeURIComponent(username)}`}>
+        <Link
+          href={`/auth/forgot-password?username=${encodeURIComponent(username)}`}
+        >
           رمز عبور را فراموش کرده‌ام
         </Link>
       </Button>
@@ -325,10 +330,6 @@ function StepOTP({
   const [isLoading, setIsLoading] = useState(false);
   const [isResending, setIsResending] = useState(false);
   const [retryAfter, setRetryAfter] = useState(otpConfig.retryAfter);
-
-  useEffect(() => {
-    setRetryAfter(otpConfig.retryAfter);
-  }, [otpConfig.retryAfter]);
 
   useEffect(() => {
     if (retryAfter <= 0) return;
@@ -381,7 +382,11 @@ function StepOTP({
         "/api/users/authenticate/check/",
         { username },
       );
-      if (!response.success || !response.data || response.data.section !== "OTP") {
+      if (
+        !response.success ||
+        !response.data ||
+        response.data.section !== "OTP"
+      ) {
         toast.error(response.message || "ارسال مجدد کد ممکن نشد");
         return;
       }
@@ -411,7 +416,7 @@ function StepOTP({
             disabled={isLoading}
             inputMode="numeric"
           >
-            <InputOTPGroup className="gap-2 *:size-10 *:!rounded-xl *:border *:!shadow-none *:data-[active=true]:border-brand-primary *:data-[active=true]:ring-brand-primary/20 sm:gap-3 sm:*:size-12">
+            <InputOTPGroup className="*:data-[active=true]:border-brand-primary *:data-[active=true]:ring-brand-primary/20 gap-2 *:size-10 *:!rounded-xl *:border *:!shadow-none sm:gap-3 sm:*:size-12">
               {Array.from({ length: otpConfig.length }, (_, index) => (
                 <InputOTPSlot key={index} index={index} />
               ))}

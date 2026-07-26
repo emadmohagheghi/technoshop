@@ -16,7 +16,7 @@ import {
 } from "@/app/_components/ui/drawer";
 import { Label } from "@/app/_components/ui/label";
 import { Slider } from "@/app/_components/ui/slider";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -24,6 +24,45 @@ import {
   AccordionTrigger,
 } from "@/app/_components/ui/accordion";
 import { Add } from "iconsax-reactjs";
+const MAX_PRICE = 500_000_000;
+
+type PriceRangeFilterProps = {
+  initialMin: number;
+  initialMax: number;
+  onCommit: (values: number[]) => void;
+};
+
+function PriceRangeFilter({
+  initialMin,
+  initialMax,
+  onCommit,
+}: PriceRangeFilterProps) {
+  const [sliderValues, setSliderValues] = useState<[number, number]>([
+    initialMin,
+    initialMax,
+  ]);
+
+  return (
+    <div className="space-y-4 p-2">
+      <div className="px-3">
+        <Slider
+          value={sliderValues}
+          onValueChange={(values) => setSliderValues([values[0], values[1]])}
+          onValueCommit={onCommit}
+          max={MAX_PRICE}
+          min={0}
+          step={500_000}
+          className="w-full"
+          dir="rtl"
+        />
+      </div>
+      <div className="flex items-center justify-between px-3 text-sm text-gray-600">
+        <span>از: {formatPrice(sliderValues[0])} تومان</span>
+        <span>تا: {formatPrice(sliderValues[1])} تومان</span>
+      </div>
+    </div>
+  );
+}
 
 const FilterContent = () => {
   const {
@@ -35,19 +74,7 @@ const FilterContent = () => {
   const categories = useHeaderStore((state) => state.categories);
   const brands = useHeaderStore((state) => state.brands);
 
-  // Parse price filter to get min and max values
   const { min, max } = parsePriceFilter(price);
-
-  // Local state for slider values
-  const [sliderValues, setSliderValues] = useState<[number, number]>([
-    min ?? 0,
-    max ?? 500_000_000,
-  ]);
-
-  // Update slider when price filter changes
-  useEffect(() => {
-    setSliderValues([min ?? 0, max ?? 500_000_000]);
-  }, [min, max]);
 
   const handleBrandChange = (checked: boolean, brandId: string) => {
     const currentBrands = brand || [];
@@ -56,14 +83,6 @@ const FilterContent = () => {
     } else {
       setBrand(currentBrands.filter((id) => id !== brandId));
     }
-  };
-
-  const handlePriceChange = (values: number[]) => {
-    setSliderValues([values[0], values[1]]);
-  };
-
-  const handlePriceCommit = (values: number[]) => {
-    setPrice(values[0], values[1]);
   };
 
   return (
@@ -104,24 +123,12 @@ const FilterContent = () => {
         <AccordionItem value="price">
           <AccordionTrigger>محدوده قیمت</AccordionTrigger>
           <AccordionContent>
-            <div className="space-y-4 p-2">
-              <div className="px-3">
-                <Slider
-                  value={sliderValues}
-                  onValueChange={handlePriceChange}
-                  onValueCommit={handlePriceCommit}
-                  max={500_000_000}
-                  min={0}
-                  step={5_00_000}
-                  className="w-full"
-                  dir="rtl"
-                />
-              </div>
-              <div className="flex items-center justify-between px-3 text-sm text-gray-600">
-                <span>از: {formatPrice(sliderValues[0])} تومان</span>
-                <span>تا: {formatPrice(sliderValues[1])} تومان</span>
-              </div>
-            </div>
+            <PriceRangeFilter
+              key={`${min ?? 0}-${max ?? MAX_PRICE}`}
+              initialMin={min ?? 0}
+              initialMax={max ?? MAX_PRICE}
+              onCommit={(values) => setPrice(values[0], values[1])}
+            />
           </AccordionContent>
         </AccordionItem>
 
@@ -204,9 +211,7 @@ export default function Filters() {
       {/* mobile */}
       <Drawer>
         <DrawerTrigger asChild>
-          <Button
-            className="bg-brand-primary w-full flex-1 !rounded-full text-white lg:hidden hover:bg-brand-primary-focus"
-          >
+          <Button className="bg-brand-primary hover:bg-brand-primary-focus w-full flex-1 !rounded-full text-white lg:hidden">
             فیلتر ها
           </Button>
         </DrawerTrigger>

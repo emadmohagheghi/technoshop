@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { middlewareAuth } from "@/utils/middelware-auth";
 
-export async function middleware(req: NextRequest) {
+export async function proxy(req: NextRequest) {
   const url = req.url;
   const pathname = req.nextUrl.pathname;
   const isProtectedCheckout =

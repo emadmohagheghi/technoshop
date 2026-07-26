@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "@/app/_components/ui/button";
@@ -57,8 +58,20 @@ function isStrongPassword(password: string) {
 }
 
 export default function ForgotPasswordPage() {
+  return (
+    <Suspense fallback={null}>
+      <ForgotPasswordForm />
+    </Suspense>
+  );
+}
+
+function ForgotPasswordForm() {
+  const searchParams = useSearchParams();
+  const initialUsername = searchParams.get("username");
   const [step, setStep] = useState<ForgotPasswordStep>("IDENTIFIER");
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(() =>
+    initialUsername && validateUsername(initialUsername) ? initialUsername : "",
+  );
   const [otp, setOtp] = useState("");
   const [token, setToken] = useState("");
   const [password, setPassword] = useState("");
@@ -66,15 +79,6 @@ export default function ForgotPasswordPage() {
   const [otpMetadata, setOtpMetadata] = useState(DEFAULT_OTP_METADATA);
   const [retryAfter, setRetryAfter] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const initialUsername = new URLSearchParams(window.location.search).get(
-      "username",
-    );
-    if (initialUsername && validateUsername(initialUsername)) {
-      setUsername(initialUsername);
-    }
-  }, []);
 
   useEffect(() => {
     if (retryAfter <= 0) return;
@@ -136,7 +140,9 @@ export default function ForgotPasswordPage() {
       setStep("PASSWORD");
     } catch (error) {
       setOtp("");
-      toast.error(getApiErrorMessage(error, "کد بازیابی اشتباه یا منقضی شده است"));
+      toast.error(
+        getApiErrorMessage(error, "کد بازیابی اشتباه یا منقضی شده است"),
+      );
     } finally {
       setIsLoading(false);
     }

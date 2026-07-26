@@ -16,7 +16,7 @@ export async function middlewareAuth(req?: NextRequest) {
     });
 
 
-    if (response.status === 401) {
+    if (response.status === 401 || response.status === 403) {
       return null;
     }
 
