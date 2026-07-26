@@ -1,4 +1,8 @@
 overrides:
+  'flatted@3.3.3': 3.4.2
+  'minimatch@3.1.2': 3.1.4
+  'picomatch@2.3.1': 2.3.2
+  'picomatch@4.0.3': 4.0.5
   postcss: 8.5.23
   sharp: 0.35.3
 
