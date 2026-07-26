@@ -77,12 +77,7 @@ export default function Steps() {
                       className={cn(
                         "border-brand-primary-focus bg-secondary text-brand-primary relative flex size-16 transform items-center justify-center rounded-full border-2 shadow-lg transition-all duration-500 ease-in-out hover:scale-105",
                         {
-                          // Completed State
                           "bg-brand-primary text-white": isComplete,
-                          // Current State
-                          "": isCurrent,
-                          // Upcoming State
-                          "": isUpcoming,
                         },
                       )}
                     >
