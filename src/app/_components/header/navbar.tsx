@@ -68,7 +68,7 @@ export default function Navbar() {
           <ul className="flex items-center gap-8 text-sm font-medium text-gray-700">
             <li>
               <DropdownMenu dir="rtl">
-                <DropdownMenuTrigger className="hover:text-brand-primary data-[state=open]:text-brand-primary flex cursor-pointer items-center gap-1 transition-colors outline-none">
+                <DropdownMenuTrigger className="hover:text-brand-primary text-black data-[state=open]:text-brand-primary flex cursor-pointer items-center gap-1 transition-colors outline-none">
                   دسته‌بندی کالاها
                   <ArrowDown2 size="18" aria-hidden="true" />
                 </DropdownMenuTrigger>
@@ -101,7 +101,7 @@ export default function Navbar() {
                 <Link
                   href={item.href}
                   className={cn(
-                    "hover:text-brand-primary transition-colors",
+                    "hover:text-brand-primary text-black",
                     pathname === "/products" &&
                       item.href === "/products" &&
                       "text-brand-primary",
