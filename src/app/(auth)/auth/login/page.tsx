@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -287,6 +288,11 @@ function StepPassword({
 
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading ? "در حال ورود..." : "ورود"}
+      </Button>
+      <Button asChild variant="link" className="w-full">
+        <Link href={`/auth/forgot-password?username=${encodeURIComponent(username)}`}>
+          رمز عبور را فراموش کرده‌ام
+        </Link>
       </Button>
       <Button
         type="button"
