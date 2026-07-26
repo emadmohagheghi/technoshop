@@ -1,5 +1,6 @@
 import { createData, deleteData, updateData } from "@/core/http-service";
 import { ApiResponseType } from "@/types/response";
+import { SearchHistory } from "@/types/user.types";
 
 export type UpdateUserDetailsRequest = {
   first_name: string;
@@ -72,4 +73,13 @@ export async function updatePassword(data: UpdatePasswordRequest) {
 
 export async function clearSearchHistory() {
   return deleteData("/api/users/search-history/");
+}
+
+export async function createSearchHistory(
+  search: string,
+): Promise<ApiResponseType<SearchHistory>> {
+  return createData<{ search: string }, SearchHistory>(
+    "/api/users/search-history/",
+    { search },
+  );
 }

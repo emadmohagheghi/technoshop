@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { readData, logoutUser } from "@/core/http-service";
-import { UserInfo } from "@/types/user.types";
+import { SearchHistory, UserInfo } from "@/types/user.types";
 import {
   updateUserDetails,
   UpdateUserDetailsRequest,
@@ -17,6 +17,7 @@ interface SessionState {
   status: AuthStatus;
   clearSession: () => void;
   updateSession: () => Promise<boolean>;
+  recordSearchHistory: (history: SearchHistory) => void;
   logout: () => Promise<void>;
   updateUserInfo: (
     data: UpdateUserDetailsRequest,
@@ -60,6 +61,23 @@ export const useUserStore = create<SessionState>((set, get) => ({
       user: null,
       status: "unauthenticated" as AuthStatus,
     }),
+
+  recordSearchHistory: (history) => {
+    const currentUser = get().user;
+    if (!currentUser) return;
+
+    set({
+      user: {
+        ...currentUser,
+        search_histories: [
+          history,
+          ...currentUser.search_histories.filter(
+            (item) => item.id !== history.id,
+          ),
+        ].slice(0, 10),
+      },
+    });
+  },
 
   updateSession: async () => {
     try {

@@ -2,122 +2,177 @@
 
 import { Input } from "@/app/_components/ui/input";
 import { cn } from "@/lib/utils";
+import { createSearchHistory } from "@/services/users-service";
+import { useUserStore } from "@/stores/user.store";
 import { SearchNormal1 } from "iconsax-reactjs";
-import { useState } from "react";
+import { FormEvent, KeyboardEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const mostSearched = [
   "مک بوک پرو",
-  "اسپیکر های jbl",
+  "اسپیکرهای JBL",
   "ایرپاد پرو",
-  "دوربین dslr",
+  "دوربین DSLR",
   "سامسونگ A55",
   "اپل ویژن پرو",
   "تبلت",
-  "لپتاپ ایسوس",
+  "لپ‌تاپ ایسوس",
   "شیائومی",
   "شارژر فست",
-];
-
-const lastSearched = [
-  "لپتاپ",
-  "قاب محافظ گوشی",
-  "تبلت",
-  "کابل شارژر",
-  "هدفون",
-  "مانیتور گیمینگ",
-  "گوشی هوشمند",
-  "پایه مانیتور",
-  "ساعت هوشمند",
-  "نگهدارنده کابل",
 ];
 
 export default function SearchBar() {
   const [isFocused, setIsFocused] = useState(false);
   const [value, setValue] = useState("");
   const router = useRouter();
+  const user = useUserStore((state) => state.user);
+  const status = useUserStore((state) => state.status);
+  const recordSearchHistory = useUserStore(
+    (state) => state.recordSearchHistory,
+  );
+  const recentSearches = user?.search_histories ?? [];
 
-  const handleSearch = (e?: React.KeyboardEvent<HTMLInputElement>) => {
-    if (!value) return;
-    if (e && e.key !== "Enter") return;
-    router.push("/products?q=" + encodeURIComponent(value));
-    setValue("");
+  const closeSearch = () => {
     setIsFocused(false);
+  };
+
+  const handleSearch = (term = value) => {
+    const query = term.trim();
+    if (!query) return;
+
+    if (status === "authenticated") {
+      void createSearchHistory(query)
+        .then((response) => {
+          if (response.success && response.data) {
+            recordSearchHistory(response.data);
+          }
+        })
+        .catch(() => {
+          // Search must remain available even when history cannot be saved.
+        });
+    }
+
+    router.push(`/products?q=${encodeURIComponent(query)}`);
+    setValue("");
+    closeSearch();
+  };
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    handleSearch();
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Escape") {
+      closeSearch();
+      event.currentTarget.blur();
+    }
   };
 
   return (
     <>
-      <div
+      <form
         className={cn(
           "group relative z-20 h-12 w-full flex-1 rounded-md bg-white lg:max-w-[600px]",
           { "rounded-b-none": isFocused },
         )}
         onFocus={() => setIsFocused(true)}
+        onSubmit={handleSubmit}
+        role="search"
       >
-        <span
-          className={cn(
-            "absolute top-1/2 right-18 -translate-y-1/2 text-gray-700 group-focus-within:hidden",
-            { "opacity-0": isFocused || value },
-          )}
-        >
-          <span className="lg:hidden">در</span>
-          <span className="text-brand-primary font-bold lg:hidden">
-            تکنوشاپ...
-          </span>
-        </span>
+        <label htmlFor="site-search" className="sr-only">
+          جست‌وجوی محصولات
+        </label>
         <Input
-          placeholder="جستجو"
+          id="site-search"
+          placeholder="جست‌وجوی محصول، برند یا دسته‌بندی"
           className={cn(
-            "size-full pr-5 focus:placeholder:opacity-0 md:text-base",
+            "size-full pr-5 pl-12 focus:placeholder:opacity-0 md:text-base",
             {
               "border-brand-primary border-0 border-b-2 placeholder:opacity-0":
                 isFocused || value,
             },
           )}
           value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyDown={handleSearch}
+          onChange={(event) => setValue(event.target.value)}
+          onKeyDown={handleKeyDown}
+          autoComplete="off"
+          enterKeyHint="search"
         />
-        <SearchNormal1
-          size="24"
-          className={cn(
-            "absolute top-1/2 left-3 -translate-y-1/2 cursor-pointer text-gray-400 transition-colors",
-            { "text-brand-primary": isFocused },
-          )}
-          onClick={() => handleSearch()}
-        />
+        <button
+          type="submit"
+          className="hover:text-brand-primary focus-visible:outline-brand-primary absolute top-1/2 left-2 grid size-9 -translate-y-1/2 place-items-center rounded-md text-gray-400 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+          aria-label="جست‌وجو"
+        >
+          <SearchNormal1
+            size="24"
+            className={cn({ "text-brand-primary": isFocused })}
+            aria-hidden="true"
+          />
+        </button>
 
-        {/* Dynamic content shown on focus */}
         {isFocused && (
-          <div className="absolute top-full left-0 z-20 flex w-full items-center gap-14 rounded-b-md bg-white p-8 shadow-lg">
-            <div>
-              <p className="mb-6 text-xl font-medium">
-                بیشترین موارد جستجو شده
-              </p>
-              <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-base text-gray-700 *:cursor-pointer">
-                {mostSearched.map((term, index) => (
-                  <p key={index}>{term}</p>
-                ))}
-              </div>
-            </div>
-            <div className="hidden lg:block">
-              <p className="mb-6 text-xl font-medium">اخرین جستجو های شما</p>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-3 text-base text-gray-700 *:cursor-pointer">
-                {lastSearched.map((term, index) => (
-                  <p key={index}>{term}</p>
-                ))}
-              </div>
+          <div
+            className="absolute top-full left-0 z-20 max-h-[calc(100dvh-72px)] w-full overflow-y-auto rounded-b-md bg-white p-4 shadow-lg sm:p-6 lg:max-h-none lg:p-8"
+            role="dialog"
+            aria-label="پیشنهادهای جست‌وجو"
+          >
+            <div className="grid gap-7 lg:grid-cols-2 lg:gap-14">
+              <section aria-labelledby="popular-searches-title">
+                <p
+                  id="popular-searches-title"
+                  className="mb-4 text-base font-medium lg:mb-6 lg:text-xl"
+                >
+                  بیشترین جست‌وجوها
+                </p>
+                <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-700 lg:gap-x-6 lg:gap-y-3 lg:text-base">
+                  {mostSearched.map((term) => (
+                    <button
+                      key={term}
+                      type="button"
+                      onClick={() => handleSearch(term)}
+                      className="hover:text-brand-primary focus-visible:text-brand-primary truncate text-right transition-colors focus-visible:outline-none"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </section>
+
+              {status === "authenticated" && recentSearches.length > 0 && (
+                <section aria-labelledby="recent-searches-title">
+                  <p
+                    id="recent-searches-title"
+                    className="mb-4 text-base font-medium lg:mb-6 lg:text-xl"
+                  >
+                    آخرین جست‌وجوهای شما
+                  </p>
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-gray-700 lg:gap-x-6 lg:gap-y-3 lg:text-base">
+                    {recentSearches.map((history) => (
+                      <button
+                        key={history.id}
+                        type="button"
+                        onClick={() => handleSearch(history.search)}
+                        className="hover:text-brand-primary focus-visible:text-brand-primary truncate text-right transition-colors focus-visible:outline-none"
+                      >
+                        {history.search}
+                      </button>
+                    ))}
+                  </div>
+                </section>
+              )}
             </div>
           </div>
         )}
-      </div>
+      </form>
 
-      {/* Overlay to close search bar */}
       {isFocused && (
-        <div
-          className="fixed inset-0 z-10 h-screen w-screen bg-black/50"
-          onClick={() => setIsFocused(false)}
-        ></div>
+        <button
+          type="button"
+          className="fixed inset-0 z-10 h-screen w-screen cursor-default bg-black/50"
+          onClick={closeSearch}
+          aria-label="بستن پیشنهادهای جست‌وجو"
+        />
       )}
     </>
   );

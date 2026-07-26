@@ -1,5 +1,11 @@
 import * as v from "valibot";
 
+export type SearchHistory = {
+  id: number;
+  search: string;
+  modified_at: string;
+};
+
 export type UserInfo = {
   full_name: string;
   first_name: string;
@@ -10,10 +16,7 @@ export type UserInfo = {
   is_superuser: boolean;
   is_verify: boolean;
   has_password: boolean;
-  search_histories: {
-    id: number;
-    search: string;
-  }[];
+  search_histories: SearchHistory[];
 };
 
 export const first_name = v.pipe(
