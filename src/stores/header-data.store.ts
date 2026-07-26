@@ -4,7 +4,6 @@ import { devtools } from "zustand/middleware";
 import { readData } from "@/core/http-service";
 
 type HeaderStore = HeaderType & {
-  setHeaderData: (header: HeaderType) => void;
   fetchHeaderData: () => Promise<void>;
 };
 
