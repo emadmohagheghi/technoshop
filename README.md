@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# تکنوشاپ — فرانت‌اند
 
-## Getting Started
+فرانت‌اند متن‌باز **تکنوشاپ**؛ فروشگاه آنلاین محصولات دیجیتال. این پروژه با رابط راست‌به‌چپ و فارسی طراحی شده و جریان کامل مرور و خرید محصول، از جست‌وجو و فیلتر تا سبد خرید، پرداخت و مدیریت حساب کاربر را پوشش می‌دهد.
 
-First, run the development server:
+نسخهٔ در حال اجرا: [technoshop.emadmo.ir](https://technoshop.emadmo.ir/)
+
+## قابلیت‌ها
+
+- صفحهٔ اصلی شامل بنرها، دسته‌بندی‌ها، برندها، پیشنهادها و جدیدترین محصولات
+- فهرست محصولات با جست‌وجو، فیلتر و مرتب‌سازی
+- صفحهٔ جزئیات محصول: گالری تصویر، مشخصات، نقد، دیدگاه‌ها و مقایسه
+- سبد خرید و فرایند چندمرحله‌ای ثبت سفارش
+- احراز هویت، بازیابی گذرواژه و مسیرهای محافظت‌شده
+- پنل کاربری: سفارش‌ها، علاقه‌مندی‌ها، آدرس‌ها، اطلاعات حساب و محصولات اخیر
+
+## فناوری‌ها
+
+- [Next.js 16](https://nextjs.org/) و React 19
+- TypeScript
+- Tailwind CSS 4 و Radix UI
+- TanStack Query برای دریافت و کش داده‌ها
+- Zustand برای مدیریت وضعیت محلی
+- Axios برای ارتباط با API
+- React Hook Form و Valibot برای فرم‌ها و اعتبارسنجی
+
+## پیش‌نیازها
+
+- Node.js `24.x`
+- pnpm `11.9.0` یا نسخهٔ سازگار
+- یک نمونهٔ در حال اجرا از API تکنوشاپ
+
+## راه‌اندازی محلی
+
+۱. مخزن را کلون کنید و وارد پوشهٔ فرانت‌اند شوید:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone <repository-url>
+cd shop/frontend
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+۲. وابستگی‌ها را نصب کنید:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+۳. فایل `.env` بسازید و آدرس API را در آن قرار دهید:
 
-## Learn More
+```env
+NEXT_PUBLIC_BASE_URL=https://api-technoshop.emadmo.ir
+```
 
-To learn more about Next.js, take a look at the following resources:
+`NEXT_PUBLIC_BASE_URL` باید آدرس پایهٔ بک‌اند باشد. چون درخواست‌ها با کوکی ارسال می‌شوند، بک‌اند و تنظیمات CORS باید استفاده از کوکی را پشتیبانی کنند.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+۴. سرور توسعه را اجرا کنید:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm dev
+```
 
-## Deploy on Vercel
+سپس برنامه در [http://localhost:3000](http://localhost:3000) در دسترس است.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## اسکریپت‌ها
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| دستور | توضیح |
+| --- | --- |
+| `pnpm dev` | اجرای محیط توسعه |
+| `pnpm lint` | بررسی قواعد ESLint |
+| `pnpm typecheck` | بررسی نوع‌ها بدون ساخت خروجی |
+| `pnpm build` | اجرای lint و typecheck، سپس ساخت نسخهٔ production |
+| `pnpm start` | اجرای نسخهٔ production پس از build |
+
+## ساختار پروژه
+
+```text
+src/
+├── app/          # مسیرها، لایه‌ها و کامپوننت‌های رابط کاربری
+├── core/         # کلاینت HTTP و مدیریت خطاهای API
+├── hooks/        # هوک‌های دریافت و فیلتر داده
+├── lib/          # ابزارها، اعتبارسنجی و تنظیمات React Query
+├── providers/    # Providerهای سراسری
+├── services/     # سرویس‌های ارتباط با API
+├── stores/       # وضعیت محلی با Zustand
+├── types/        # نوع‌های TypeScript
+└── utils/        # توابع کمکی
+```
