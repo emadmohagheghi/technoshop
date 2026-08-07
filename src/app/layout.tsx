@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from "@/app/_components/ui/sonner";
 import QueryProvider from "@/providers/react-query-provider";
+import CartSyncProvider from "@/providers/cart-sync-provider";
 import NextTopLoader from "nextjs-toploader";
 
 const iranyekan = localFont({
@@ -90,6 +91,7 @@ export default function RootLayout({
       <body className={`${iranyekan.variable} antialiased`}>
         <NextTopLoader showSpinner={false} color="var(--color-primary)" />
         <QueryProvider>
+          <CartSyncProvider />
           {children}
           <Toaster />
         </QueryProvider>

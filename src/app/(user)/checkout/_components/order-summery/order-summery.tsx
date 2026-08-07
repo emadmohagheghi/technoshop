@@ -59,7 +59,7 @@ export default function OrderSummary({
   const confirmOrder = useMutation({
     mutationFn: confirmCheckout,
     onSuccess: async (confirmation) => {
-      await refreshCart();
+      await refreshCart(true);
       queryClient.removeQueries({ queryKey: ["checkout"] });
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: profileQueryKeys.orders }),

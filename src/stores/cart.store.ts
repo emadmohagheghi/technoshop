@@ -7,6 +7,7 @@ import {
   ServerCart,
   setServerCartQuantity,
 } from "@/services/cart-service";
+import { publishServerCartChanged } from "@/lib/cart-sync";
 
 export type CartItem = {
   short_slug: number;
@@ -26,9 +27,10 @@ interface CartStore {
   isClearing: boolean;
 
   initialize: (isAuthenticated: boolean) => Promise<boolean>;
-  refresh: () => Promise<boolean>;
+  refresh: (notifyOtherTabs?: boolean) => Promise<boolean>;
   setQuantity: (short_slug: number, quantity: number) => Promise<boolean>;
   clearCart: () => Promise<boolean>;
+  syncGuestCart: (cart: CartItem[]) => void;
 
   getQuantity: (short_slug: number) => number;
   getTotalItems: () => number;
@@ -68,6 +70,35 @@ const setLocalQuantity = (
 
 const removePendingSlug = (pendingSlugs: number[], short_slug: number) =>
   pendingSlugs.filter((slug) => slug !== short_slug);
+
+const normalizeGuestCart = (cart: CartItem[]): CartItem[] => {
+  const quantities = new Map<number, number>();
+
+  for (const item of cart) {
+    if (
+      !Number.isInteger(item.short_slug) ||
+      !Number.isInteger(item.quantity) ||
+      item.quantity <= 0
+    ) {
+      continue;
+    }
+
+    quantities.set(item.short_slug, Math.min(100, item.quantity));
+  }
+
+  return Array.from(quantities, ([short_slug, quantity]) => ({
+    short_slug,
+    quantity,
+  }));
+};
+
+const cartsAreEqual = (first: CartItem[], second: CartItem[]) =>
+  first.length === second.length &&
+  first.every(
+    (item, index) =>
+      item.short_slug === second[index]?.short_slug &&
+      item.quantity === second[index]?.quantity,
+  );
 
 const hydrateGuestCart = async () => {
   if (!useCartStore.persist.hasHydrated()) {
@@ -123,6 +154,7 @@ export const useCartStore = create<CartStore>()(
             pendingSlugs: [],
             isClearing: false,
           });
+          if (guestCart.length > 0) publishServerCartChanged();
           return true;
         } catch {
           if (currentInitialization === initializationId) {
@@ -139,7 +171,7 @@ export const useCartStore = create<CartStore>()(
         }
       },
 
-      refresh: async () => {
+      refresh: async (notifyOtherTabs = false) => {
         if (get().source !== "server") return false;
         try {
           const response = await getCart();
@@ -148,6 +180,7 @@ export const useCartStore = create<CartStore>()(
             status: "ready",
             error: null,
           });
+          if (notifyOtherTabs) publishServerCartChanged();
           return true;
         } catch {
           set({ status: "error", error: "cart_refresh_failed" });
@@ -210,6 +243,7 @@ export const useCartStore = create<CartStore>()(
               status: "ready",
               error: null,
             }));
+            publishServerCartChanged();
             return true;
           } catch {
             if (cartSession !== initializationId || get().source !== "server") {
@@ -274,6 +308,7 @@ export const useCartStore = create<CartStore>()(
               pendingSlugs: [],
               status: "ready",
             });
+            publishServerCartChanged();
             return true;
           } catch {
             set({
@@ -284,6 +319,20 @@ export const useCartStore = create<CartStore>()(
             return false;
           }
         });
+      },
+
+      syncGuestCart: (cart) => {
+        if (get().source !== "guest") return;
+
+        const guestCart = normalizeGuestCart(cart);
+        if (
+          cartsAreEqual(get().cart, guestCart) &&
+          cartsAreEqual(get().guestCart, guestCart)
+        ) {
+          return;
+        }
+
+        set({ cart: guestCart, guestCart, error: null });
       },
 
       getQuantity: (short_slug) =>
